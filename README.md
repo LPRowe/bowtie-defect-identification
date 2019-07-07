@@ -5,7 +5,7 @@ They are the result of residual stress acting on microcracks.
 ![Example Bowtie Defect](/0009raw_1188.png)
 
 This repository will address:
-1. Converting .dv1 (Delta Vision) images into Shear 0, Shear 45, and Shear Max images
+1. Converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
 1. Creating/applying subtraction images
 1. Detecting (and removing) hypersensitive pixels and unnecessary images
 1. Cleaning manually identified bowties and non-bowties
@@ -16,5 +16,5 @@ For information:
 * about the automated process of collecting microscopic shear stress measurements see [here](/documents/IR-GFP-automation.pdf).
 * about the equipment used (IR-GFP) to image wafers see [here](/documents/IR-GFP.pdf)
 
-Special thanks go out to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
+Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
 
