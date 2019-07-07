@@ -2,7 +2,7 @@
 Bowtie defects (shown below) can be observed in microscopic shear stress images of silicon wafers.  
 They are the result of residual stress acting on microcracks.  
 
-![Example Bowtie Defect](/images/example_bowtie.png)
+![Example Bowtie Defect](/0009raw_1188.png)
 
 This repository will address:
 1. Converting .dv1 (Delta Vision) images into Shear 0, Shear 45, and Shear Max images
