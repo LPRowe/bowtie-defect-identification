@@ -15,7 +15,7 @@ For information:
 * regarding the use of bowtie defects to characterize monocrystalline silicon wafers according to strength see [here](/documents/NDPE CHAR OF cSi PV WAFERS.pdf).
 * about the methods used to collect and post process microscopic wafer images see [here](/documents/Overview of IR-GFP Wafer Image Data Set.pdf.ink)
 * about the automated process of collecting microscopic shear stress measurements see [here](/documents/IR-GFP-automation.pdf).
-* about the equipment used (IR-GFP) to image wafers see [here](/documents/IR-GFP.pdf)
+* about the equipment used (IR-GFP) to image wafers see [here](/documents/.pdf)
 
 Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
 
