@@ -15,7 +15,7 @@ For information:
 * regarding the use of bowtie defects to characterize monocrystalline silicon wafers according to strength see [here](/documents/NDPE%20CHAR%20OF%20cSi%20PV%20WAFERS.pdf).
 * about the methods used to collect and post process microscopic wafer images see [here](/documents/Overview_IR-GFP_Wafer_Image_Data_Set.pdf)
 * about the automated process of collecting microscopic shear stress measurements see [here](/documents/IR-GFP-automation.pdf).
-* about the equipment used (IR-GFP) to image wafers see [here](/documents/Horn_2005.pdf)
+* about the equipment used (IR-GFP) to image wafers see [here](/documents/Horn_2005.pdf) and J. Lesniak & M. Zickel, "Applications of Automated Grey-Field Polariscope" SEM June 1998.
 
 Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
 
