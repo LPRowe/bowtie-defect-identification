@@ -25,5 +25,5 @@ The .py files provided in this repository are intended to be run sequentially ac
 
 1. Collects light level information from each microscopic image and tracks which pixels have uncommonly high intensity.  This information is saved in the designated savefile and will be used to filter out low quality images and identify hypersensitive pixels.  
     1. Set post-saw-damage-removal boolean.
-    * True if wafer name starts with 00 or 02 and False otherwise
+        * True if wafer name starts with 00 or 02 and False otherwise
     1. Update savefile and datafile if necessary
