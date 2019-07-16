@@ -20,3 +20,17 @@ in microelectronic materials and devices" Review of Scientific Instruments 2005.
 
 Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
 
+# Instructions
+The .py files provided in this repository are intended to be run sequentially according to the number in the file name.  The .dt1 files containing 3,234-3,500 microscopic IR-GFP images for each wafer are not included in the repository.  You can access them through the lab external hard drive or copy them into the Wafer Data Files folder included in the repository.  If you choose to do the latter then update the variables datafile and dt1file in the code to reflect the new location of the .dt1 files.  
+
+1. Collects light level information from each microscopic image and tracks which pixels have uncommonly high intensity.  This information is saved in the designated savefile and will be used to filter out low quality images and identify hypersensitive pixels.  
+    1. Set post-saw-damage-removal boolean.
+        * True if wafer name starts with 00 or 02 and False otherwise
+    1. Update savefile and datafile if necessary
+    1. If running multiple wafers at once, uncomment multi-wafer analysis section and comment out waferlist
+1. Records the average (across a full wafer) value and standard deviation (across a full wafer) of the average light (within each microscopic image) and standard deviation (within each microscopic image) of pixel intensities.  These values will be used to filter out low quality microscopic IR-GFP images based on light level and standard deviation of pixel intensities.  
+    1. Update datafile and save file
+1. During long imaging sessions, the detector heats up.  When the detector is hot it often has hypersensitive (hot) pixels.  These are pixels which register higher than true shear max values, which likely means their light intensity flickers.  This script identifies and records the location of hypersensitive pixels.  More details are included within the script.  
+    1. Update file locations
+    1. Set psdr boolean
+    1. Update waferlist to reflect which wafer(s) you want to check for hot pixels
