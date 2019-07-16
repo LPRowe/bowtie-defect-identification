@@ -28,4 +28,9 @@ The .py files provided in this repository are intended to be run sequentially ac
         * True if wafer name starts with 00 or 02 and False otherwise
     1. Update savefile and datafile if necessary
     1. If running multiple wafers at once, uncomment multi-wafer analysis section and comment out waferlist
-1. 
+1. Records the average (across a full wafer) value and standard deviation (across a full wafer) of the average light (within each microscopic image) and standard deviation (within each microscopic image) of pixel intensities.  These values will be used to filter out low quality microscopic IR-GFP images based on light level and standard deviation of pixel intensities.  
+    1. Update datafile and save file
+1. During long imaging sessions, the detector heats up.  When the detector is hot it often has hypersensitive (hot) pixels.  These are pixels which register higher than true shear max values, which likely means their light intensity flickers.  This script identifies and records the location of hypersensitive pixels.  More details are included within the script.  
+    1. Update file locations
+    1. Set psdr boolean
+    1. Update waferlist to reflect which wafer(s) you want to check for hot pixels
