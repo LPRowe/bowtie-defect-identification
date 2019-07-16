@@ -20,3 +20,10 @@ in microelectronic materials and devices" Review of Scientific Instruments 2005.
 
 Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
 
+# Instructions
+The .py files provided in this repository are intended to be run sequentially according to the number in the file name.  The .dt1 files containing 3,234-3,500 microscopic IR-GFP images for each wafer are not included in the repository.  You can access them through the lab external hard drive or copy them into the Wafer Data Files folder included in the repository.  If you choose to do the latter then update the variables datafile and dt1file in the code to reflect the new location of the .dt1 files.  
+
+1. Collects light level information from each microscopic image and tracks which pixels have uncommonly high intensity.  This information is saved in the designated savefile and will be used to filter out low quality images and identify hypersensitive pixels.  
+  1. Set post-saw-damage-removal boolean.
+    * True if wafer name starts with 00 or 02 and False otherwise
+  2. Update savefile and datafile if necessary
