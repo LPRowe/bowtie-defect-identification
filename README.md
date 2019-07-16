@@ -27,3 +27,5 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. Set post-saw-damage-removal boolean.
         * True if wafer name starts with 00 or 02 and False otherwise
     1. Update savefile and datafile if necessary
+    1. If running multiple wafers at once, uncomment multi-wafer analysis section and comment out waferlist
+1. 
