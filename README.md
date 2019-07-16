@@ -34,3 +34,5 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. Update file locations
     1. Set psdr boolean
     1. Update waferlist to reflect which wafer(s) you want to check for hot pixels
+    * A hypersensitive pixel is one that occurs as the most intense pixel (in a shear max image) 4 or more times out of 3,234 shear max iamges on a wafer.  Each image contains 640 * 480 pixels, as such the probability of a single pixel occuring that has already occured as the most intense pixel in an image reoccuring as the most intense pixel in 1 to 5 other images is given by the following graph.  
+![Hypersensitive Pixel Probability](images/hypersensitive-pixel-probability.JPG)
