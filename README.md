@@ -50,7 +50,10 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. Shear max images are sub-divided into 16 equally sized "sub-images"
     1. The most intense pixel in the shear max sub-image region is boxed and annotated by the sub-image index
     1. Image is saved for manual bowtie identification
-    <p align='center'><img src=''></p>
-    For your convenience set of approximately 500 manually identified bowties and non-bowties are already provided here ([non-bowties](Wafer_Images\manually_identified_non-bowties) & [bowties](Wafer_Images\manually_identified_bowties))
+    <p align='center'><b>Shear 0 Manual Bowtie Identification</b></p>
+    <p align='center'><img src='images/285_0.png' width='600' title='Shear 0 Manual Bowtie Identification'></p>
+    <p align='center'><b>Shear 45 Manual Bowtie Identification</b></p>
+    <p align='center'><img src='images/285_45.png' width='600' title='Shear 45 Manual Bowtie Identification'></p>
+    In the example there is a large bowtie at location 3 and smaller bowties at locations 7 and 12. For your convenience set of approximately 500 manually identified bowties and non-bowties are already provided here ([non-bowties](Wafer_Images\manually_identified_non-bowties) & [bowties](Wafer_Images\manually_identified_bowties))
     
     
