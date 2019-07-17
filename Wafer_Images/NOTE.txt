@@ -1,0 +1,17 @@
+Manually Identified Bowties & Other:
+
+-All files are saved as Wafer_Image Location_Sublocation on Image_Pixel on Image_Shear 0 or Shear 45.npy
+
+
+Dust: 
+
+-Data is stored as image location, sublocation
+
+
+50_imgloc_subloc_manual ID bowties & other:
+
+-the 50 means this data is for wafer 50
+
+-the data is stored as image location, sublocation
+
+-Image location and sublocation can be seen in file 50 where the peak pixels are numbered by their sublocation and the file is named after the image location followed by whether it is shear 0 or shear 45
