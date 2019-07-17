@@ -3,6 +3,15 @@
 Created on Tue Aug 28 16:08:36 2018
 
 @author: Logan Rowe
+
+This script generates a shear 0 and a shear 45 subtraction image for each wafer.
+The subtraction image is the average of N=108 shear 0 and shear 45 images.
+
+The images selected to make the subtraction images are those that have the lowest
+shear max retardation.  The bulk shear max retardation is present due to both the 
+wafer and polychromatic nature of the light source.  By selecting the images with
+the lowest shear max value we aim to create a subtraction image that will remove
+optical aberrations while having a minimal effect on the retardation induced by the wafer.
 """
 
 import os
@@ -185,11 +194,3 @@ ax1.imshow(subimg0)
 ax2.imshow(subimg45)
 ax1.set_title(r'$\delta_0$ Subtraction Image')
 ax2.set_title(r'$\delta_{45}$ Subtraction Image')
-
-'''
-plt.figure()
-ax1=plt.subplot(1,2,1,sharey=ax2)
-
-ax2=plt.subplot(122,sharey=ax1)
-plt.imshow(subimg45)
-'''
