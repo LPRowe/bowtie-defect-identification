@@ -14,8 +14,32 @@ import matplotlib.pyplot as plt
 import csv
 import sys
 
-#READ A DT1 FILE AND RETURN 3 IMAGES: SHEAR 0, SHEAR 45 AND LIGHT IMAGES
 def formimg(filename,filelocation):
+    '''
+    filename: .dt1 file that you wish to convert to a numpy array
+    filelocation: the folder the file is located in
+    
+    READ A DT1 FILE AND RETURN 3 IMAGES: SHEAR 0, SHEAR 45 AND LIGHT IMAGES
+    
+    .dt1 files are structured such that they contain a header and 3 sequential images
+    
+    Reads the file backwards to detect @**@Data then splits the header from 
+    the data at the index of @**@Data + 34
+    
+    Each image contains 640*480=307,200 data points (the number of pixels)
+    The first 307,200 data points make up the IR-Transmission (Light) image
+    the second set of data points make up the Shear 45 (img45) image
+    and the third set of data points make up the Shear 0 (img0) image
+    
+    Since the raw Shear 45 and Shear 0 images must be divided by the light image
+    to obtain the desired shear 45 and shear 0 measurements a singularity occurs
+    when a pixel registers 0 for the light image.  Here this issue is addressed in
+    img45_[img45_==np.inf]=1, however this issue may also be resolved by setting all 
+    zero value Light image pixels to the average of the light image prior to forming
+    the shear 0 and shear 45 images.
+    '''
+    
+    
     os.chdir(filelocation)
     
     #These are the x and y dimensions of each image in pixels
@@ -62,24 +86,37 @@ def formimg(filename,filelocation):
     return img0,img45,imgL
 
 
-#STRESS OPTIC COEFFICIENT FOR (100) SILICON
 def C(theta): #Units Inverse Pascals
+    """
+    STRESS OPTIC COEFFICIENT FOR (001) SILICON
+    Units are in inverse Pascals
+    
+    theta=0 along the 100 direction
+    """
     p44=6.5e-13 #Pa-1
     p11_12=9.88e-13 #Pa-1
     n_0=3.54 #Ordinary refractive index
     C=(n_0**3/2)*(((np.sin(2*theta)/p44)**2+(np.cos(2*theta)/p11_12)**2)**(-0.5))
     return C
 
-#Calculates the direction of the first principal stress accounting for anisotropy of stress optic coefficient
 def beta(d0,d45): #Units: Radians
+    """
+    Takes shear 0 (d0) and shear 45 (d45) measurement and returns the direction of first principal stress.
+    d0 and d45 can be floats, ints or numpy arrays
+    
+    Calculates the direction of the first principal stress accounting for anisotropy of stress optic coefficient
+    Units are in Radians
+    """
     C_45=C(np.pi/4)
     C_0=C(0)
     A=(d45*C_45)/(d0*C_0)
     beta=np.arctan(A-((1+A**2)**0.5))
     return beta
 
-#CALCULATES THE SHEAR MAX IMAGE FROM SHEAR 0 AND SHEAR 45 IMAGES
 def shear_max_img(d0,d45): #Units: the same as d0 and d45
+    """
+    CALCULATES THE SHEAR MAX IMAGE FROM SHEAR 0 AND SHEAR 45 IMAGES
+    """
     Beta=beta(d0,d45)
     C_0=C(0)
     C_B=C(Beta)
@@ -153,9 +190,10 @@ def WriteRows(rows,filepath,name,tab=False):
            writer.writerow(row)
            
            
-#SUBDIVIDE IMAGE INTO SET OF SMALLER IMAGES
+
 def subsub(image1,xdim,ydim,dx,dy):
     '''
+    SUBDIVIDE IMAGE INTO SET OF SMALLER IMAGES:
     This divides a image1 with dimensions (xdim by ydim pixels) into an array of smaller images, each with dimensions (dx by dy pixels)
     '''
     setofsmallerimages=[]
@@ -164,10 +202,19 @@ def subsub(image1,xdim,ydim,dx,dy):
             setofsmallerimages.append(image1[ii:ii+dy,jj:jj+dx])
     return setofsmallerimages
     
-#GIVEN A PIXELS INDEX (1) AND THE SUBIMG IT IS LOCATED IN (2) WILL RETURN THE PIXELS INDEX IN THE FULL IMAGE
-#ALSO REQUIRES THE DIMENSIONS OF THE SUBIMAGE IN PIXELS (3,4)
-#AND THE NUMBER OF SUBIMAGES THAT SPAN ACROSS THE FULL IMAGE (5) (i.e. IF THE SUB IMAGE IS 160 PIXELS ACROSS AND THE FULL IMAGE IS 640 PIXELS ACROSS THEN Xsubsubimagesacross=4)
 def LocalToGlobalIdx(LocalIndex,SubSubImgIndex,Xpixelspersubsub,Ypixelspersubsub,Xsubsubimagesacross):
+    '''
+    LocalIndex: PIXELS INDEX IN THE SUB-DIVIDED IMAGE (1)
+    SubSubImgIndex: THE INDEX OF THE SUB-DIVIDED IMAGE IT IS LOCATED IN (2) 
+    Xpixelspersubsub: How many pixels wide is each sub-divided image (3)
+    Ypixelspersubsub: How many pixels tall is each sub-divided image (4)
+    Xsubimagesacross: How many sub-divided images wide is the image (5) 
+    
+    (i.e. IF THE SUB IMAGE IS 160 PIXELS ACROSS AND THE FULL IMAGE IS 640 PIXELS ACROSS THEN Xsubsubimagesacross=4)
+
+    
+    WILL RETURN THE PIXELS INDEX IN THE FULL IMAGE
+    '''
     globalidx_=(SubSubImgIndex//Xsubsubimagesacross)*Xpixelspersubsub*Ypixelspersubsub*Xsubsubimagesacross+(LocalIndex//Xpixelspersubsub)*(Xsubsubimagesacross*Xpixelspersubsub)+(SubSubImgIndex%Xsubsubimagesacross)*Xpixelspersubsub+LocalIndex%Xpixelspersubsub
     return globalidx_
     
@@ -190,15 +237,23 @@ def boxpoint(img,G,value,xdim=640,ydim=480,boxsize=20):
             img[Y+i][X-int(boxsize/2)]=value
     return img
 
-#SET ALL HYPERSENSITIVE PIXELS TO EQUAL THE MEAN VALUE OF THE IMAGE
-#THIS CAN EASILY BE ADAPTED TO MAKE THE VALUE THE AVERAGE OF THE PIXELS 4 CLOSEST NEIGHBORS (NOT A NECESSITY FOR MACHINE LEARNING PURPOSES)
 def resetpixels(img,badpix,value,xdim=640):
+    """
+    img: np array of image
+    badpix: list of hypersensitive pixel indices
+    value: np.mean(image) or mean value of pixels neighboring the hot pixel (recommended)
+    
+    SET ALL HYPERSENSITIVE PIXELS TO EQUAL THE MEAN VALUE OF THE IMAGE
+    THIS CAN EASILY BE ADAPTED TO MAKE THE VALUE THE AVERAGE OF THE PIXELS 4 CLOSEST NEIGHBORS (NOT A NECESSITY FOR MACHINE LEARNING PURPOSES)
+    """
     for pix in badpix:
         img[int(pix)//xdim][int(pix)%xdim]=value
     return img
     
-    #Performs a linescan from center of circle to edge (length R) and sweeps 360 degrees around the circle starting at angle theta_0
 def circlesweep(img,G,R,res,xdimension=640,theta_0=0,CCW=True):
+    """
+    Performs a linescan from center of circle to edge (length R) and sweeps 360 degrees around the circle starting at angle theta_0
+    """
     X,Y=G%xdimension,G//xdimension
     
     meanvals=[]
