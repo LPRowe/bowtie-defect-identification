@@ -2,7 +2,7 @@
 Bowtie defects (shown below) can be observed in microscopic shear stress images of silicon wafers.  
 They are the result of residual stress acting on microcracks.  
 
-![Example Bowtie Defect](images/0009raw_1188.png)
+<p align='center'><img src='images/0009raw_1188.png' width='600'></p>
 
 This repository will address:
 1. Converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
@@ -35,9 +35,9 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. Set psdr boolean
     1. Update waferlist to reflect which wafer(s) you want to check for hot pixels
     * A hypersensitive pixel is one that occurs as the most intense pixel (in a shear max image) 4 or more times out of 3,234 shear max iamges on a wafer.  Each image contains 640 * 480 pixels, as such the probability of a single pixel occuring that has already occured as the most intense pixel in an image reoccuring as the most intense pixel in 1 to 5 other images is given by the following graph.  
-![Hypersensitive Pixel Probability](images/hypersensitive-pixel-probability.JPG)
-1. Generates a shear 0 and shear 45 subtraction image for each wafer.  A subtraction image is the average of 108 images and will be used to remove the effects of consistent optical aberrations caused by reflections, imperfections in the optic train, and a polychromatic light source.  Low quality images (images of the wafer mask or blurry images) are filtered out prior to selecting the 108 images that will be used to make the subtraction image.  Of the remaining images, the 108 images with the lowest average shear max retardation are selected to make the subtraction image.  A brief explanation for why this is done is included in the script.   
+<p align='center'><img src='images/hypersensitive-pixel-probability.JPG' width='400'></p>
+4. Generates a shear 0 and shear 45 subtraction image for each wafer.  A subtraction image is the average of 108 images and will be used to remove the effects of consistent optical aberrations caused by reflections, imperfections in the optic train, and a polychromatic light source.  Low quality images (images of the wafer mask or blurry images) are filtered out prior to selecting the 108 images that will be used to make the subtraction image.  Of the remaining images, the 108 images with the lowest average shear max retardation are selected to make the subtraction image.  A brief explanation for why this is done is included in the script.   
 <p align='center'><b>Example Subtraction Image</b></p>
-<p align='center'><img src='images/shear_0_45_subtraction_image.png'></p>
+<p align='center'><img src='images/shear_0_45_subtraction_image.png' width='600'></p>
 <p align='center'><b>Effect of Applying Subtraction Image</b></p>
-<p align='center'><img src='images/0009raw_93_SubExample.png'></p>
+<p align='center'><img src='images/0009raw_93_SubExample.png' width='600'></p>
