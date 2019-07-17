@@ -29,12 +29,12 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. Update savefile and datafile if necessary
     1. If running multiple wafers at once, uncomment multi-wafer analysis section and comment out waferlist
 1. Records the average (across a full wafer) value and standard deviation (across a full wafer) of the average light (within each microscopic image) and standard deviation (within each microscopic image) of pixel intensities.  These values will be used to filter out low quality microscopic IR-GFP images based on light level and standard deviation of pixel intensities.  
-    1. Update datafile and save file
+    1. Update datafile and savefile
 1. During long imaging sessions, the detector heats up.  When the detector is hot it often has hypersensitive (hot) pixels.  These are pixels which register higher than true shear max values, which likely means their light intensity flickers.  This script identifies and records the location of hypersensitive pixels.  More details are included within the script.  
     1. Update file locations
     1. Set psdr boolean
     1. Update waferlist to reflect which wafer(s) you want to check for hot pixels
-    * A hypersensitive pixel is one that occurs as the most intense pixel (in a shear max image) 4 or more times out of 3,234 shear max iamges on a wafer.  Each image contains 640 * 480 pixels, as such the probability of a single pixel occuring that has already occured as the most intense pixel in an image reoccuring as the most intense pixel in 1 to 5 other images is given by the following graph. 
+    * A hypersensitive pixel is one that occurs as the most intense pixel (in a shear max image) 4 or more times out of 3,234 shear max iamges on a wafer.  Each image contains 640 * 480 pixels, as such the probability of a single pixel that has already occured as the most intense pixel in an image reoccuring as the most intense pixel in 1 to 5 other images is given by the following graph. 
     '''
     <p align='center'><img src='images/hypersensitive-pixel-probability.JPG' width='400'></p>
     '''
