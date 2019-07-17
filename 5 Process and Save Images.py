@@ -52,9 +52,9 @@ regen=True
        
 #FOLDERS
 savefile='E:\\cSi Wafer Data\\DeltaVision Scripts\\Wafer Images'
-subfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Subtraction Images'
-hotpixfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Hot Pixel Lists'
-lightlevelfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels'
+subfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Subtraction_Images'
+hotpixfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Hot_Pixel_Lists'
+lightlevelfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels'
 
   
 #WAFERS TO BE ANALYZED
@@ -96,7 +96,7 @@ for wafer in wafers:
         pass
 
     #LOAD HOT PIXEL LIST
-    os.chdir(lightlevelfile+'\\Hot Pixel Lists')
+    os.chdir(lightlevelfile+'\\Hot_Pixel_Lists')
     hotpix=np.genfromtxt(wafer+'_hotpix.txt').tolist()
     hotpix=[int(i) for i in hotpix]
     

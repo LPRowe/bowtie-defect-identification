@@ -20,8 +20,8 @@ import os
 import glob
 
 
-datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Data'
-savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels'
+datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels\\Data'
+savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels'
 os.chdir(datafile)
 
 

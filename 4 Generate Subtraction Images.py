@@ -20,9 +20,9 @@ from myscripts3 import basic_tools as basic
 import glob
 import matplotlib.pyplot as plt
 
-savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Subtraction Images'
+savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Subtraction_Images'
 waferfile='D:\\Talbot Runs'
-lightlevelfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels'
+lightlevelfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels'
 
 #REGENERATE ALREADY EXISTING SUBTRACTION IMAGES?
 regen=False
@@ -141,7 +141,7 @@ while count<len(waferlist):
         
     
     #LOAD LIST OF HOT PIXELS FOR WAFER
-    os.chdir(lightlevelfile+'\\Hot Pixel Lists')
+    os.chdir(lightlevelfile+'\\Hot_Pixel_Lists')
     hotpix=np.genfromtxt(wafer+'_hotpix.txt').tolist()
     hotpix=[int(i) for i in hotpix]
     

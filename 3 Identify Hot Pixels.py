@@ -28,8 +28,8 @@ import numpy as np
 import os
 import glob
 
-savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Hot Pixel Lists'
-datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Data'
+savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels\\Hot_Pixel_Lists'
+datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels\\Data'
 waferdatafile='E:\\cSi Wafer Data\\DeltaVision Scripts\\Wafer Data Files'
 psdr=False #etched=True and as-cut wafers=False
 
