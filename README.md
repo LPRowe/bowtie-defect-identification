@@ -39,7 +39,18 @@ The .py files provided in this repository are intended to be run sequentially ac
     <p align='center'><img src='images/hypersensitive-pixel-probability.JPG' width='400'></p>
     '''
 1. Generates a shear 0 and shear 45 subtraction image for each wafer.  A subtraction image is the average of 108 images and will be used to remove the effects of consistent optical aberrations caused by reflections, imperfections in the optic train, and a polychromatic light source.  Low quality images (images of the wafer mask or blurry images) are filtered out prior to selecting the 108 images that will be used to make the subtraction image.  Of the remaining images, the 108 images with the lowest average shear max retardation are selected to make the subtraction image.  A brief explanation for why this is done is included in the script.   
-<p align='center'><b>Example Subtraction Image</b></p>
-<p align='center'><img src='images/shear_0_45_subtraction_image.png' width='600'></p>
-<p align='center'><b>Effect of Applying Subtraction Image</b></p>
-<p align='center'><img src='images/0009raw_93_SubExample.png' width='600'></p>
+    <p align='center'><b>Example Subtraction Image</b></p>
+    <p align='center'><img src='images/shear_0_45_subtraction_image.png' width='600'></p>
+    <p align='center'><b>Effect of Applying Subtraction Image</b></p>
+    <p align='center'><img src='images/0009raw_93_SubExample.png' width='600'></p>
+1. Generates annotated images of 5x IR-GFP images to facilitate the process of manually identifying bowties to train the machine learning classifier.  The procedure of doing so is as follows:
+    1. Each image is generated from a .dt1 file
+    1. Low quality images (blurry or low light) are filtered out
+    1. Images are post processed by applying a subtraction image and removing hypersensitive pixels
+    1. Shear max images are sub-divided into 16 equally sized "sub-images"
+    1. The most intense pixel in the shear max sub-image region is boxed and annotated by the sub-image index
+    1. Image is saved for manual bowtie identification
+    <p align='center'><img src=''></p>
+    For your convenience set of approximately 500 manually identified bowties and non-bowties are already provided here ([non-bowties](Wafer_Images\manually_identified_non-bowties) & [bowties](Wafer_Images\manually_identified_bowties))
+    
+    
