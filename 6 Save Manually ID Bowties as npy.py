@@ -44,7 +44,7 @@ sub0=np.load('sub0_low.npy')
 sub45=np.load('sub45_low.npy')
 
 #LOAD LOCATIONS OF MANUALLY IDENTIFIED BOWTIES AND OTHER
-bowtiefile='E:\cSi Wafer Data\DeltaVision Scripts\Wafer Images'
+bowtiefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images'
 os.chdir(bowtiefile)
 bowties=np.genfromtxt(wafer+'_imgloc_subloc manual ID bowties.txt',delimiter=',')
 other=np.genfromtxt(wafer+'_imgloc_subloc manual ID other.txt',delimiter=',')

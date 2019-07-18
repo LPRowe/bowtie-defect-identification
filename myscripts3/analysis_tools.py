@@ -20,7 +20,12 @@ ydim=480
 
 BadIndices=[]
 
-def diradj(d0,d45,theta_diradj): #Returns correct d0 and d45 based on direction adjustment
+def diradj(d0,d45,theta_diradj):
+    '''
+    Returns correct d0 and d45 based on direction adjustment
+    This is equivalent to altering the direction adjustment setting in the IR-GFP
+    See IR-GFP manual for more details
+    '''
     theta=theta_diradj
     C_0=C(0)
     C_45=C(np.pi/4)
@@ -28,7 +33,11 @@ def diradj(d0,d45,theta_diradj): #Returns correct d0 and d45 based on direction 
     d0_adj=-(C_45/C_0)*d45*np.sin(2*theta)+d0*np.cos(2*theta)
     return (d0_adj,d45_adj)
 
-def sigratio(KR,beta,alpha): #This is the ratio of principal stresses based on KI/KII and derived from Shlyannikov Mode Mixity Parameters paper
+def sigratio(KR,beta,alpha):
+    '''
+    This is the ratio of principal stresses based on KI/KII 
+    it is derived from Shlyannikov's paper on Mode Mixity Parameters
+    '''
     sr=(1/np.tan(beta-alpha))*(KR*np.sin(beta-alpha)-np.cos(beta-alpha))/(KR*np.cos(beta-alpha)+np.sin(beta-alpha))
     return sr
 
@@ -38,13 +47,23 @@ def ConvList(From,To):
 
 #STRESS OPTIC COEFFICIENT FOR SILICON
 def C(theta):
+    '''
+    Stress Optic Coefficient for Silicon
+    theta=0 along the 100 direction of silicon
+    Piezo optic coefficients obtained from Danyluk et al. 2014
+    '''
     p44=6.5e-13 #Pa-1
     p11_12=9.88e-13 #Pa-1
     n_0=3.54 #Ordinary refractive index
     C=(n_0**3/2)*(((np.sin(2*theta)/p44)**2+(np.cos(2*theta)/p11_12)**2)**(-0.5))
     return C
     
-def d0_calc(KI,KII,theta,alpha): #KI in pa*m^0.5 theta,alpha radians and returns retardation in meters
+def d0_calc(KI,KII,theta,alpha):
+    '''
+    KI in pa*m^0.5 theta,alpha radians and returns retardation in meters
+    Expected shear 0 retardation from a microcrack with given stress intensity factors (KI,KII) that has a crack plane along angle alpha from the 100 driection
+    *Assumes the silicon wafer is 170 um thick and measurement is taken 5 um radius from the crack tip
+    '''
     d=(5.841573026*10**(-13)*KI*np.sin(alpha)*np.cos((1/2)*theta)*np.sin((1/2)*theta)*np.sin((3/2)*theta)*np.cos(alpha)-5.841573026*10**(-13)*KI*np.cos((1/2)*theta)*np.sin((1/2)*theta)*np.cos((3/2)*theta)*np.cos(alpha)**2+5.841573026*10**(-13)*KII*np.sin(alpha)*np.cos((1/2)*theta)*np.sin((1/2)*theta)*np.cos((3/2)*theta)*np.cos(alpha)+5.841573026*10**(-13)*KII*np.cos((1/2)*theta)*np.sin((1/2)*theta)*np.sin((3/2)*theta)*np.cos(alpha)**2+2.920786513*10**(-13)*KI*np.cos((1/2)*theta)*np.sin((1/2)*theta)*np.cos((3/2)*theta)+5.841573026*10**(-13)*KII*np.sin(alpha)*np.sin((1/2)*theta)*np.cos(alpha)-2.920786513*10**(-13)*KII*np.cos((1/2)*theta)*np.sin((1/2)*theta)*np.sin((3/2)*theta)-5.841573026*10**(-13)*KII*np.cos((1/2)*theta)*np.cos(alpha)**2+2.920786513*10**(-13)*KII*np.cos((1/2)*theta))
     return(d)
     
@@ -58,9 +77,12 @@ def dM_calc_normalized(KI,KII,theta):#Normalized dM
     return dM
 
     
-def beta_true(d0,d45): #Calculates the direction of the first principal stress accounting for C0,C45
-    #Note: dirimg_calc and dirpixel_calc will match deltavision perfectly, but because of anisotropy in stress
-    #optic coefficient this is the true direction of first principal stress
+def beta_true(d0,d45):
+    '''
+    Calculates the direction of the first principal stress accounting for C0,C45
+    Note: dirimg_calc and dirpixel_calc will match deltavision perfectly, but because of anisotropy in stress
+    optic coefficient this is the true direction of first principal stress
+    '''
     C_45=C(np.pi/4)
     C_0=C(0)
     A=(d45*C_45)/(d0*C_0)
@@ -83,9 +105,12 @@ def dM_true(d0,d45):
     return dM
     
     
-def imgM_true(img0,img45,m0,m45): #Calculates the shear max image while accounting for C0, C45 and C(Beta)
-    #beta is calculated from mean value here, it should be done pixel by pixel but this 
-    #function will be normalized so for the sake of speed beta(m0,m45)
+def imgM_true(img0,img45,m0,m45):
+    '''
+    Calculates the shear max image while accounting for C0, C45 and C(Beta)
+    beta is calculated from mean value here, it should be done pixel by pixel but this 
+    function will be normalized so for the sake of speed beta(m0,m45)
+    '''
     beta=beta_true(m0,m45)
     C_0=C(0)
     C_B=C(beta)
@@ -150,17 +175,22 @@ def read_circle_sweep_txt_true(file):
     return (KI,KII,A,dM,d0,d45)
     
     
-def dirimg_calc(img0,img45): #VALIDATED! <--- TRUST _CALC MORE
-    #This calculation of the first principal stress is derived from the eigenvectors of the stress tensor
-    #Then shear0 and shear45 were subbed into sh0=-s12 and sh45=0.5*(s11-s22) to achieve the following
-    #SEE MAPLE: RA/2018/PRINC STRSS DIR/1 for  more details
+def dirimg_calc(img0,img45): 
+    '''
+    Calculation Validated by comparison between Python and DeltaVision Software
+    This calculation of the first principal stress is derived from the eigenvectors of the stress tensor
+    Then shear0 and shear45 were subbed into sh0=-s12 and sh45=0.5*(s11-s22) to achieve the following
+    SEE MAPLE: RA/2018/PRINC STRSS DIR/1 for  more details
+    '''
     beta=-np.arctan((-img45+(img0**2+img45**2)**0.5)/(img0))
     return beta
 
 def dirpixel_calc(d0,d45):
-    #This calculation of the first principal stress is derived from the eigenvectors of the stress tensor
-    #Then shear0 and shear45 were subbed into sh0=-s12 and sh45=0.5*(s11-s22) to achieve the following
-    #SEE MAPLE: RA/2018/PRINC STRSS DIR/1 for  more details
+    '''
+    This calculation of the first principal stress is derived from the eigenvectors of the stress tensor
+    Then shear0 and shear45 were subbed into sh0=-s12 and sh45=0.5*(s11-s22) to achieve the following
+    SEE MAPLE: RA/2018/PRINC STRSS DIR/1 for  more details
+    '''
     beta=-np.arctan((-d45+np.sqrt(d0**2+d45**2))/(d0))
     return beta
 
@@ -168,6 +198,14 @@ def formimg(filename):
     global img0,img45,imgL
     """
     Reads a .dt1 file and returns imgL, img0 and img45 as numpy arrays.
+    
+    All images are 640 by 480 arrays
+    
+    imgL: infrared transmission (Light Image)
+    img0: shear 0 image 
+    img45: shear 45 image
+    
+    See IR-GFP manual or Horn et al. 2005 for more details about shear images
     """
     
     filestring = open(filename,"rb").read()
@@ -209,6 +247,15 @@ def formimg(filename):
        
             
 def WriteRows(rows,filepath,name,tab=False):
+    '''
+    Takes in zip(list1,list2,list3,list4,...) writes as a comma delimited .txt file
+    
+    rows: zipped lists
+    filepath: string - where to save the text file
+    name: string - what to name the text file (omit .txt)
+    tab=False defaults to comma delimiter
+    tab=True tab delimiter
+    '''
     csvfile = filepath + '\\' + name + '.txt'
     with open(csvfile, "w") as output:
         if tab!=True:
@@ -219,14 +266,37 @@ def WriteRows(rows,filepath,name,tab=False):
            writer.writerow(row)
            
 def rebin(a,shape):
+    '''
+    digitally alter the resolution of array a by changing its shape
+    
+    a.shape
+    >>>(480,640)
+    
+    reduced_resolution_image=rebin(a,(240,320))
+    '''
     sh=shape[0],a.shape[0]//shape[0],shape[1],a.shape[1]//shape[1]
     return a.reshape(sh).mean(-1).mean(1)
     
 def LocalToGlobalIdx(LocalIndex,SubSubImgIndex,Xpixelspersubsub,Ypixelspersubsub,Xsubsubimagesacross):
+    '''
+    LocalIndex: PIXELS INDEX IN THE SUB-DIVIDED IMAGE (1)
+    SubSubImgIndex: THE INDEX OF THE SUB-DIVIDED IMAGE IT IS LOCATED IN (2) 
+    Xpixelspersubsub: How many pixels wide is each sub-divided image (3)
+    Ypixelspersubsub: How many pixels tall is each sub-divided image (4)
+    Xsubimagesacross: How many sub-divided images wide is the image (5) 
+    
+    (i.e. IF THE SUB IMAGE IS 160 PIXELS ACROSS AND THE FULL IMAGE IS 640 PIXELS ACROSS THEN Xsubsubimagesacross=4)
+
+    
+    WILL RETURN THE PIXELS INDEX IN THE FULL IMAGE
+    '''
     globalidx_=(SubSubImgIndex//Xsubsubimagesacross)*Xpixelspersubsub*Ypixelspersubsub*Xsubsubimagesacross+(LocalIndex//Xpixelspersubsub)*(Xsubsubimagesacross*Xpixelspersubsub)+(SubSubImgIndex%Xsubsubimagesacross)*Xpixelspersubsub+LocalIndex%Xpixelspersubsub
     return globalidx_
 
-def cu_to_retard(CU,lambda_,thetapk): #Takes in Camera Units, lambda [nm], thetapk [CU] and converts to retardation
+def cu_to_retard(CU,lambda_,thetapk):
+    '''
+    Takes in Camera Units, lambda [nm], thetapk [CU] and converts to retardation
+    '''
     retard=(lambda_*CU/float(2*thetapk*np.pi))
     return retard
 
@@ -234,9 +304,12 @@ def cu_to_Pa(CU,lambda_,thetapk,C,t): #for bulk through thickness measurements
     sigma=lambda_*CU/(2*np.pi*C*t*thetapk)
     return sigma
 
-#Takes in training data set file and returns theta 0,theta 45,theta M (orientations of bowties) and average values from linescans for each bow tie starting at t0,t45,tM
-#USE PICKLE TO SAVE AND READ TRAINING SET: TAKES MORE MEMORY BUT IS SIMPLER
+
 def read_training_set(location,file):
+    '''
+    #Takes in training data set file and returns theta 0,theta 45,theta M (orientations of bowties) and average values from linescans for each bow tie starting at t0,t45,tM
+    #USE PICKLE TO SAVE AND READ TRAINING SET: TAKES MORE MEMORY BUT IS SIMPLER
+    '''
     os.chdir(location)
     fd=open(file,'r')
     lines=fd.readlines()
@@ -328,6 +401,10 @@ def read_data_set(location,file,raw_max=False):
 
 #SUBDIVIDE IMAGE INTO SET OF SMALLER IMAGES
 def subsub(image1,xdim,ydim,dx,dy):
+    '''
+    SUBDIVIDE IMAGE INTO SET OF SMALLER IMAGES:
+    This divides a image1 with dimensions (xdim by ydim pixels) into an array of smaller images, each with dimensions (dx by dy pixels)
+    '''
     setofsmallerimages=[]
     for ii in range(0,ydim,dy):
         for jj in range(0,xdim,dx):
@@ -335,6 +412,11 @@ def subsub(image1,xdim,ydim,dx,dy):
     return setofsmallerimages
     
 def boxpoint(img,G,value,xdim=640,ydim=480,boxsize=20):
+    '''
+    This draws a box of 20 pixels lenght around pixel G
+    
+    value should be set to np.max(img) or np.min(img) such that the box is white or black
+    '''
     X,Y=G%xdim,G//xdim
     for i in range(-int(boxsize/2),int(boxsize/2)+1):
         if 0<X+i and (X+i)<xdim and (Y+int(boxsize/2))<ydim:
@@ -432,8 +514,10 @@ def bowscan(img0,img45,index):
     return features
     
 def sigperp(sig11,sig12,sig22,alpha):
-    #TAKES IN BULK RESIDUAL STRESS FIELD AND CRACK ORIENTATION.  RETURNS STRESS NORMAL TO CRACK.
-    #SEE MAPLE C:\Users\Logan Rowe\Desktop\Protected Folder\Image Processing\6 Calculate KI KII and Alpha
+    '''
+    TAKES IN BULK RESIDUAL STRESS FIELD AND CRACK ORIENTATION.  RETURNS STRESS NORMAL TO CRACK.
+    SEE MAPLE C:\Users\Logan Rowe\Desktop\Protected Folder\Image Processing\6 Calculate KI KII and Alpha
+    '''
     sigperp=(np.cos(alpha)**2)*(sig22-sig11)+sig11+(2*np.cos(alpha)*np.sin(alpha)*sig12)
     return sigperp
 
