@@ -62,4 +62,4 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. In the folder /Wafer_Images create two new .txt files named {wafer}_imgloc_subloc manual ID bowties.txt and {wafer}_imgloc_subloc manual ID other.txt
     1. Note the location of each bowtie and non-bowtie in the respective files by {image location},{sub-image location} (see the example 50_imgloc_subloc manual ID bowties.txt file for clarification)
     
-    
+1. This script will read the manually identified bowtie and non-bowtie location files that you created after running script 5.  It will then load the images containing bowties, post process the image with a subtraction image, and crop a 40 by 40 pixel region around each bowtie or non-bowtie.  The cropped (non)bowties are saved as .npy files for ease of access later without the need for post processing.  More information/directions regarding the scipt are included in the scripts header.  
