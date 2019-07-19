@@ -13,8 +13,16 @@ import matplotlib.pyplot as plt
 
 xdim,ydim=640,480
 
-#Performs a linescan from center of circle to edge (length R) and sweeps 360 degrees around the circle starting at angle theta_0
 def circlesweep(img,G,R,res,xdimension=640,theta_0=0,CCW=True):
+    '''
+    Performs a linescan from center of circle to edge (length R) and sweeps 360 degrees around the circle starting at angle theta_0
+    
+    G: index of pixel you wish to sweep around (int)
+    R: radius in pixels of the line that will be swept in a circle (int)
+    res: increment of line that will be swept (pixels)
+    theta_0: starting angle of the line that will be swept theta_0=0 is along the 100 direction (radians)
+    CCW: if True will sweep the line in a counter-clockwise motion, if False then clockwise motion
+    '''
     X,Y=G%xdimension,G//xdimension
     
     meanvals=[]
@@ -47,7 +55,19 @@ def circlesweep(img,G,R,res,xdimension=640,theta_0=0,CCW=True):
     
     return (meanvals,thetas)
     
-def circlesweep_test(img,G,R,res,xdimension=640,theta_0=0,CCW=True):#Check the direction that circle sweep goes CW or CCW and starting at x+ or x-
+def circlesweep_test(img,G,R,res,xdimension=640,theta_0=0,CCW=True):
+    '''
+    Check the direction that circle sweep goes CW or CCW and starting at x+ or x-
+    This is just for testing purposes and will likely not be called upon in code
+    
+    G: index of pixel you wish to sweep around (int)
+    R: radius in pixels of the line that will be swept in a circle (int)
+    res: increment of line that will be swept (pixels)
+    theta_0: starting angle of the line that will be swept theta_0=0 is along the 100 direction (radians)
+    CCW: if True will sweep the line in a counter-clockwise motion, if False then clockwise motion
+
+    '''
+    
     X,Y=G%xdimension,G//xdimension
     
     meanvals=[]
@@ -86,8 +106,16 @@ def circlesweep_test(img,G,R,res,xdimension=640,theta_0=0,CCW=True):#Check the d
 
 
 
-#Linescan across a given pixel of lenght 2R at angle theta
-def linescan(img,G,R,theta):  #Returns linescan (values, radius) and mean value
+def linescan(img,G,R,theta):
+    '''
+    Linescan across a given pixel of length 2R (R is in pixels) at angle theta (theta is measured from the x+ axis aka the [1,0,0] direction on the wafer)
+    Returns linescan (values, radius) and mean value
+    
+    img: image which you wish to perform linescan on (numpy array)
+    G: index of pixel at the center of the line scan (int)
+    R: half the length of the linescan (pixels)
+    theta: angle of the linescan with respect to x+ direction (radians)
+    '''
     X,Y=G%xdim,G//xdim
     vals=[] #CU
     radius=[] #Pixels
@@ -110,9 +138,19 @@ def linescan(img,G,R,theta):  #Returns linescan (values, radius) and mean value
     return (vals,radius,meanval)
     
 
-#Take average of line scans as linescan rotates about a pixel
-def circlescan(img,G,R,theta_0,res): #Image, central pixel of scan, half length of line in pixels, starting theta, resolution
-    #returns circle scan (meanvals,thetas), orientation of max value
+
+def circlescan(img,G,R,theta_0,res): 
+    '''
+    Take average of line scans as linescan rotates about a pixel
+    Image, central pixel of scan, half length of line in pixels, starting theta, resolution
+    returns circle scan (meanvals,thetas,angle at which max value was observed)
+    
+    G: index of pixel you wish to sweep around (int)
+    R: radius in pixels of the line that will be swept in a circle (int)
+    res: increment of line that will be swept (pixels)
+    theta_0: starting angle of the line that will be swept theta_0=0 is along the 100 direction (radians)
+    CCW: if True will sweep the line in a counter-clockwise motion, if False then clockwise motion
+    '''
     
     meanvals=[]
     thetas=[]
@@ -135,6 +173,15 @@ def circlescan(img,G,R,theta_0,res): #Image, central pixel of scan, half length 
     return (meanvals,thetas,thetamax_)
     
 def savgol(data,windowsize,power):
+    '''
+    Savitzky-Golay Filter
+    
+    data: 1D array or List of data points you wish to smooth (i.e. meanvals from circlescan() or circlesweep())
+    windowsize: The length of the filter window (i.e. the number of coefficients)
+    power: The order of the polynomial used to fit the samples. power must be less than windowsize.
+    
+    See scipy.signal.savgol_filter documentation for more dtails
+    '''
     #newdata=sp.signal.savgol_filter(data,windowsize,power)
     newdata=sg.savgol_filter(data,windowsize,power)
     return newdata
@@ -163,6 +210,21 @@ def classify_scan(img,G):
     return (meanvals_fit,meanvals,thetas)
     
 def classify_scan_fit(img,G,fit=True):
+    '''
+    Returns (meanvals_fit,meanvals,thetas,thetamax) if fit=True
+    Returns (meanvals,thetas,thetamax) if fit=False
+    
+    
+    Performs circle scan on image around pixel index G
+    Normalizes the values of the scan to range from between 0 and 1
+    If fit=True then the thetas vs meanvals curve will be smoothed by a Savitzky Golay Filter
+    
+    img: the image that contains pixel G (numpy array)
+    G: the index of the pixel of interest (int)
+    meanvals: a list of average linescans as the line scan is rotated around the pixel
+    meanvals_fit: meanvals smoothed by a Sav-Gol filter
+    '''
+    
     windowsize,power,res,R,theta_0=51,7,100,4,0
     #Window to perform savgol over, power to use (3 provides smooth fit), number of averaged linescans per 180deg, pixel radius to linescan over, starting theta (arbitrary since max theta will be determined and used)
     
@@ -272,7 +334,7 @@ if __name__=='__main__':
     
     for (i,j) in zip(X,Y):
         x,y=G%640,G//640
-        img[y+j][x+i]=0
+        img[int(y+j)][int(x+i)]=0
     
     plt.close('all')
     plt.imshow(img)
