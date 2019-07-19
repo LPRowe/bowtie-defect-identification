@@ -1,4 +1,4 @@
-#<u>To Do</u>
+# <u>To Do</u>
 * [x]  Edit scripts and supporting modules to run on Python 3.7
 * [x]  Structure directory and rename file paths for Git repository
 * [x]  Upload scripts to read .dt1 files
