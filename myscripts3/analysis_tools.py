@@ -434,7 +434,8 @@ subsub.func_doc="Image,xdim,ydim,dx,dy: retruns subdivided image"
 
 def lightmask(img,AveLight,StdLight,MeanAveLight,StdAveLight,MeanStdLight,StdStdLight):
     #x=0.5, y=0.05 too stringent
-    """~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    """
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     AA: MeanAveLight is the average of the average values of all of the light images from the wafer
     SA: StdAveLight is the STD of all of the mean values from light images
     
@@ -446,7 +447,8 @@ def lightmask(img,AveLight,StdLight,MeanAveLight,StdAveLight,MeanStdLight,StdStd
     
     LOOKS AT IMG LIGHT LEVEL AND STANDARD DEVIATION WITH RESPECT TO ALL OTHER IMAGES 
     TO DETERMINE WHETHER THE IMAGE CONTAINS MASK OR NOT AND FLAG IT IF IT DOES
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    """
     
     #Observe wafers Light Lists to Determine pass/fail
     lightmask=[]
@@ -514,10 +516,11 @@ def bowscan(img0,img45,index):
     return features
     
 def sigperp(sig11,sig12,sig22,alpha):
-    '''
+    """
     TAKES IN BULK RESIDUAL STRESS FIELD AND CRACK ORIENTATION.  RETURNS STRESS NORMAL TO CRACK.
-    SEE MAPLE C:\Users\Logan Rowe\Desktop\Protected Folder\Image Processing\6 Calculate KI KII and Alpha
-    '''
+    SEE MAPLE C:\\Users\\Logan Rowe\\Desktop\\Protected Folder\\Image Processing\\6 Calculate KI KII and Alpha
+    """
+    
     sigperp=(np.cos(alpha)**2)*(sig22-sig11)+sig11+(2*np.cos(alpha)*np.sin(alpha)*sig12)
     return sigperp
 

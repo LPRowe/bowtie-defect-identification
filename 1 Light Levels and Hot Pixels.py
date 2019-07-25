@@ -27,7 +27,7 @@ from myscripts3 import analysis_tools as at
 psdr=False #Is the wafer etched (psdr) or as cut? PSDR is true if wafer name starts with 00## or 02## where as as cut (psdr=False) are just ##
 trunc=3300 #how many images to stop at (cut off top dark space) typically 3300 for etched and 3234 for as-cut
 datafile='E:\\cSi Wafer Data\\DeltaVision Scripts\\Wafer Data Files'
-savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels'
+savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels\\Data'
 
 regen=False #IF TRUE WILL ANALYZE WAFERS THAT HAVE ALREADY BEEN ANALYZED BEFORE IF FALSE IT WILL SKIP THESE WAFERS
 
@@ -52,7 +52,7 @@ else:
             waferlist.append(i.split('_')[1])
 '''
         
-waferlist=['50'] #IF ANALYZING ONLY SPECIFIC WAFERS
+waferlist=['93'] #IF ANALYZING ONLY SPECIFIC WAFERS
     
 
 count=0

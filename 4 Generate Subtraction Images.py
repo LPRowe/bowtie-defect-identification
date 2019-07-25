@@ -33,7 +33,6 @@ psdr=False
 xdim,ydim=640,480
         
 os.chdir(waferfile)
-waferlist=[]
 
 #UNCOMMENT THIS SECTION TO RUN ALL WAFERS AT ONCE (AND DELETE waferlist below)
 ''' 
@@ -47,7 +46,7 @@ for i in glob.glob('1_*'):
 '''
 
 #OR RUN ONLY SELECTED WAFERS
-waferlist=['50']  
+waferlist=['93']  
 
 #BUILD DICTIONARY OF LOWEST SHEAR MAX IMAGES THAT PASS LIGHT TEST FOR EACH WAFER
 #USE THESE IMAGES FOR THE SUBTRACTION IMAGE SINCE THE LOWEST SHEAR MAX SHOULD CONSIST

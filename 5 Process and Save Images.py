@@ -47,7 +47,7 @@ from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
 xdim,ydim=640,480
 
 psdr=False
-regen=True
+regen=False
 
        
 #FOLDERS
@@ -67,7 +67,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['50'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
+wafers=['93'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
 
 
 for wafer in wafers:
