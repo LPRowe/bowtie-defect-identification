@@ -18,7 +18,9 @@ For information:
 * about the equipment used (IR-GFP) to image wafers see Horn et al. "Infrared grey-field polariscope: A tool for rapid stress analysis
 in microelectronic materials and devices" Review of Scientific Instruments 2005 and J. Lesniak & M. Zickel, "Applications of Automated Grey-Field Polariscope" SEM June 1998.
 
-Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.
+# Acknowledgments
+
+Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.  This study was supported by the National Science Foundation (NSF) under Grant No. CMMI13-00466.
 
 # Instructions
 The .py files provided in this repository are intended to be run sequentially according to the number in the file name; points 1 - 6 below correspond to .py files beginning with 1 - 6.  The .dt1 files containing 3,234-3,500 microscopic IR-GFP images for each wafer are not included in the repository.  You can access them through the lab external hard drive or copy them into the Wafer Data Files folder included in the repository.  If you choose to do the latter then update the variables datafile and dt1file in the code to reflect the new location of the .dt1 files.  
