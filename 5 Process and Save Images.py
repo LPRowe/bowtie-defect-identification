@@ -47,7 +47,7 @@ from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
 xdim,ydim=640,480
 
 psdr=False
-regen=False
+regen=True
 
        
 #FOLDERS
