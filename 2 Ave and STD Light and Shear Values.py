@@ -14,6 +14,9 @@ for each wafer in the designated savefile
 5) Average of Shear Max Before Subtraction Image
 
 These values will be used to help filter out poor quality images
+
+If script is working properly 'Light_Levels\\WaferLight_AA_AS_SA_SS_MM.txt' will
+have one row for every wafer that has been run in script 1 Light Levels and Hot Pixels
 """
 
 import numpy as np

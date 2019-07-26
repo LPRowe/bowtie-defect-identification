@@ -16,7 +16,6 @@ Bowties are the result of the wafer's bulk residual stress acting on microcracks
 As such, the center of a bowtie registers a very high shear max stress.
 Boxing and annotating high intensity pixels facilitates the process of identifying
 potential bowties that can be used to train the machine learning classifier.  
-
 """
 
 import numpy as np
@@ -47,7 +46,7 @@ from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
 xdim,ydim=640,480
 
 psdr=False
-regen=False
+regen=True
 
        
 #FOLDERS
@@ -67,7 +66,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['93'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
+wafers=['35'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
 
 
 for wafer in wafers:
@@ -125,6 +124,9 @@ for wafer in wafers:
         #if count<100:
         #    count+=1
         #    continue
+        
+        if count>300:
+            break
         
         os.chdir(datafile)
         img0,img45,imgL=basic.formimg(i,datafile)

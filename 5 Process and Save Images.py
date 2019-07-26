@@ -67,7 +67,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['93'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
+wafers=['17'] #SINGLE WAFER RUNS KEEP THIS LINE, ALL WAFER RUNS COMMENT OUT
 
 
 for wafer in wafers:
@@ -125,6 +125,9 @@ for wafer in wafers:
         #if count<100:
         #    count+=1
         #    continue
+        
+        if count > 300:
+            break
         
         os.chdir(datafile)
         img0,img45,imgL=basic.formimg(i,datafile)

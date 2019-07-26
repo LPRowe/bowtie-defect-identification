@@ -12,6 +12,9 @@ shear max retardation.  The bulk shear max retardation is present due to both th
 wafer and polychromatic nature of the light source.  By selecting the images with
 the lowest shear max value we aim to create a subtraction image that will remove
 optical aberrations while having a minimal effect on the retardation induced by the wafer.
+
+If script is working properly Subtraction_Images\\{Wafer} should contain
+two new subtraction image npy files after running.
 """
 
 import os
@@ -46,7 +49,7 @@ for i in glob.glob('1_*'):
 '''
 
 #OR RUN ONLY SELECTED WAFERS
-waferlist=['93']  
+waferlist=['17']  
 
 #BUILD DICTIONARY OF LOWEST SHEAR MAX IMAGES THAT PASS LIGHT TEST FOR EACH WAFER
 #USE THESE IMAGES FOR THE SUBTRACTION IMAGE SINCE THE LOWEST SHEAR MAX SHOULD CONSIST
