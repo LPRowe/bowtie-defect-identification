@@ -52,7 +52,7 @@ else:
             waferlist.append(i.split('_')[1])
 '''
         
-waferlist=['93'] #IF ANALYZING ONLY SPECIFIC WAFERS
+waferlist=['35'] #IF ANALYZING ONLY SPECIFIC WAFERS
     
 
 count=0
