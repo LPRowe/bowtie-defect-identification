@@ -47,7 +47,7 @@ else:
             waferlist.append(i.split('_')[1])
 
 #OR SPECIFY WHICH WAFER(S) YOU WANT TO RUN WITH THIS SCRIPT        
-waferlist=['17']
+waferlist=['27']
             
 
 for wafer in waferlist:

@@ -66,11 +66,36 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['35'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
+wafers=['93'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
 
+'''
+We are interested in saving images of boxed regions that do not contain bowties
+Given the sparse nature of bowties we will box the same pixels in each image
+(1 region per sub image) and then go back and select the ones that do not contain a bowtie
+
+The pixel selected (for simplicity) will be the central pixel in each subimage region
+'''
+maxidx=[] #pixels around wich a box will be placed
+
+xpix=[(i+0.5)*160 for i in range(4)]
+ypix=[(i+0.5)*120 for i in range(4)]
+
+for i in xpix:
+    for j in ypix:
+        maxidx.append(int(i+(j*640)))
+
+maxidx=np.sort(maxidx)
+
+'''
+A=np.full((480,640),0)
+for i in maxidx:
+    A[i//640][i%640]=1
+plt.gray()
+plt.imshow(A)
+'''
 
 for wafer in wafers:
-    imgsavefile=savefile+'\\'+wafer #This is where the wafer images will be stored
+    imgsavefile=savefile+'\\'+wafer+'\\'+'Non-bowties' #This is where the wafer images will be stored
     if os.path.exists(imgsavefile)!=True:
         os.makedirs(imgsavefile)
     
@@ -121,9 +146,10 @@ for wafer in wafers:
     #ANALYZE ALL IMAGES
     count=0
     for i in filenames:
-        #if count<100:
-        #    count+=1
-        #    continue
+        if count%8!=0:
+            print('skipped',count)
+            count+=1
+            continue
         
         if count>300:
             break
@@ -161,12 +187,12 @@ for wafer in wafers:
         
         
         #IF IMAGE DOES PASS SUBDIVIDE IMAGE AND GET LOCATION OF MAX SHEAR MAX
-        dx,dy=160,120 #To make 16 images per 5x shear max image
-        subimages=basic.subsub(imgM,xdim,ydim,dx,dy)
+        #dx,dy=160,120 #To make 16 images per 5x shear max image
+        #subimages=basic.subsub(imgM,xdim,ydim,dx,dy)
     
         #RECORD LOCATIONS OF PEAK RETARDATIONS
-        localmaxes=[np.argmax(k) for k in subimages]
-        maxidx=[basic.LocalToGlobalIdx(k,m,dx,dy,xdim//dx) for (k,m) in zip(localmaxes,range(0,len(localmaxes)))]
+        #localmaxes=[np.argmax(k) for k in subimages]
+        #maxidx=[basic.LocalToGlobalIdx(k,m,dx,dy,xdim//dx) for (k,m) in zip(localmaxes,range(0,len(localmaxes)))]
         
         val=np.max(imgM)
         
@@ -230,9 +256,4 @@ for wafer in wafers:
         
         #if count>105:
         #    break
-
-    #SAVE FILES
-    rows=zip(pf,imgloc,subloc,peakpixel)
-    name=wafer+'_pf_imgloc_subloc_peakpixel'
-    basic.WriteRows(rows,savefile,name)
     

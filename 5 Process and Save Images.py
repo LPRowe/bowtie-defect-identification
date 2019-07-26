@@ -67,7 +67,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['17'] #SINGLE WAFER RUNS KEEP THIS LINE, ALL WAFER RUNS COMMENT OUT
+wafers=['27'] #SINGLE WAFER RUNS KEEP THIS LINE, ALL WAFER RUNS COMMENT OUT
 
 
 for wafer in wafers:
