@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 xdim,ydim=640,480 #dimensions of a typical image in pixels
 
 #DATA FILE WHERE RAW IMAGES ARE STORED
-wafer='93'
+wafer='17'
 datafile='D:\\Talbot Runs\\1_'+wafer+'\\dt1_'
 
 #SAVE FILE (WHERE TO SAVE THE NPY FILES OF THE MANUALLY IDENTIFIED BOWTIES AND OTHER)
