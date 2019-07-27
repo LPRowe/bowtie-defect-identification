@@ -1,7 +1,0 @@
-493 is a good example of why hot pixels are detrimental to the bowtie ID process
-
-498 is a good example of failed image
-
-302,0 double bowtie
-302,9 double bowtie
-395,14 double bowtie

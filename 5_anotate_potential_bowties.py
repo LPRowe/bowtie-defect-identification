@@ -55,6 +55,7 @@ savefile='E:\\cSi Wafer Data\\DeltaVision Scripts\\Wafer Images'
 subfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Subtraction_Images'
 hotpixfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Hot_Pixel_Lists'
 lightlevelfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels'
+save_text_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images'
 
   
 #WAFERS TO BE ANALYZED
@@ -67,7 +68,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['27'] #SINGLE WAFER RUNS KEEP THIS LINE, ALL WAFER RUNS COMMENT OUT
+wafers=['93'] #SINGLE WAFER RUNS KEEP THIS LINE, ALL WAFER RUNS COMMENT OUT
 
 
 for wafer in wafers:
@@ -127,6 +128,10 @@ for wafer in wafers:
         #    continue
         
         if count > 300:
+            #SAVE FILES
+            rows=zip(pf,imgloc,subloc,peakpixel)
+            name=wafer+'_pf_imgloc_subloc_peakpixel_'+str(int(count))
+            basic.WriteRows(rows,save_text_dir,name)
             break
         
         os.chdir(datafile)
@@ -234,6 +239,6 @@ for wafer in wafers:
 
     #SAVE FILES
     rows=zip(pf,imgloc,subloc,peakpixel)
-    name=wafer+'_pf_imgloc_subloc_peakpixel'
+    name=wafer+'_pf_imgloc_subloc_peakpixel_'+str(int(count))
     basic.WriteRows(rows,savefile,name)
     
