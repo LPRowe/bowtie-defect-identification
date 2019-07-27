@@ -12,9 +12,9 @@
 * [ ]  Test precision and recall of each branch
 
 
-* [ ]  Create script to save images of non-bowties
+* [x]  Create script to save images of non-bowties
 * [ ]  Create script to crop all non-bowties and bowties, save as .npy in 'Wafer_Images\\Bowties\\Wafer' and 'Wafer_Images\\non-bowties\\wafer'
-* [ ]  Manually identify bowties for wafer 27
+* [x]  Manually identify bowties for wafer 27
 
 
 * [ ]  Save all circle scans of shear 0 and shear 45 to pd data file
@@ -22,3 +22,5 @@
 
 * [ ]  Make tool to plot parametric plot given wafer, location to assist with identifying bowties
 * [ ]  Add example bowtie and non-bowtie image, circle scan, and parametric plot pair to README.md
+* [ ]  Add GIF of shear 0 shear 45 bowtie to show how to recognize a bowtie
+* [ ]  Add a GIF of shear 0 and shear 45 dust to show how to recognize dust
