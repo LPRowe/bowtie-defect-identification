@@ -250,17 +250,27 @@ def resetpixels(img,badpix,value,xdim=640):
         img[int(pix)//xdim][int(pix)%xdim]=value
     return img
     
-def circlesweep(img,G,R,res,xdimension=640,theta_0=0,CCW=True):
+def circlesweep(img,G,R,res,xdim=640,theta_naught=0,CCW=True):
     """
-    Performs a linescan from center of circle to edge (length R) and sweeps 360 degrees around the circle starting at angle theta_0
+    Performs a linescan from center of circle to edge (length R) 
+    and sweeps 360 degrees around the circle starting at angle theta_0
+    
+    img: image sweep will be done in
+    G: pixel index about which sweep will be done G=ylocation*xdim+xlocation
+    R: radius of line scan (recommended 4 to capture most bowties)
+    res: how many data points to collect (i.e. 100 will rotate the line scan by 3.6 degrees each time or 200 by 1.8 degrees each time)
+    theta_naught: 
+    CCW: counter clockwise linescan rotation if boolean=True
+        
+    returns (meanvals,thetas)
     """
-    X,Y=G%xdimension,G//xdimension
+    X,Y=G%xdim,G//xdim
     
     meanvals=[]
     thetas=[]
     
-    theta=theta_0    
-    while theta<(theta_0+(2*np.pi)):
+    theta=theta_naught    
+    while theta<(float(theta_naught)+float(2*np.pi)):
         
         vals=[] #CU
         
@@ -284,7 +294,7 @@ def circlesweep(img,G,R,res,xdimension=640,theta_0=0,CCW=True):
         
         theta+=float(2*np.pi/res)
     
-    return (meanvals,thetas)
+    return (meanvals[:-1],thetas[:-1])
 
     
 
