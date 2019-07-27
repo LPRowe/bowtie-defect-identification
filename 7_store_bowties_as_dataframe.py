@@ -30,7 +30,14 @@ for identity in [('bowtie',bowtie_dir),('nonbowtie',nonbowtie_dir)]:
                 #its way into the bowtie dataset even though it is not in the data file
                 #this will skip the phantom bowtie
                 continue
+            
             bow0,bow45=np.load(bow0_file),np.load(bow45_file)
             plt.imshow(bow45)
-            break
+            
+            #perform circle scan
+            
+            #save as 36 shear 45 points, 36 shear 0 points, 1 bowtie or 0 not bowtie
+            
+            #create a file to save .png of bowties to make sure index cropping is correct
+            #do the same for non-bowties to double check for bowties in the non-bowtie set
             
