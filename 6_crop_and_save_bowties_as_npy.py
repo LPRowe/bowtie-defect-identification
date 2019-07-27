@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 xdim,ydim=640,480 #dimensions of a typical image in pixels
 
 #DATA FILE WHERE RAW IMAGES ARE STORED
-wafer='17'
+wafer='93'
 datafile='D:\\Talbot Runs\\1_'+wafer+'\\dt1_'
 
 #SAVE FILE (WHERE TO SAVE THE NPY FILES OF THE MANUALLY IDENTIFIED BOWTIES AND OTHER)
@@ -103,4 +103,3 @@ for identity in [(bowties,bowsavefile,'Bowties'),(other,nonbowsavefile,'Nonbowti
         """
         
         print(loc)
-    break #Break after bowties since non-bowties will use different pixel indices

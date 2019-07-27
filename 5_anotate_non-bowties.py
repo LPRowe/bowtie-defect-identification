@@ -54,6 +54,7 @@ savefile='E:\\cSi Wafer Data\\DeltaVision Scripts\\Wafer Images'
 subfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Subtraction_Images'
 hotpixfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light Levels\\Hot_Pixel_Lists'
 lightlevelfile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Light_Levels'
+savedir2='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images'
 
   
 #WAFERS TO BE ANALYZED
@@ -66,7 +67,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['93'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
+wafers=['17','27','50'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
 
 '''
 We are interested in saving images of boxed regions that do not contain bowties
@@ -152,6 +153,8 @@ for wafer in wafers:
             continue
         
         if count>300:
+            rows=zip(imgloc,subloc)
+            basic.WriteRows(rows,savedir2,str(wafer)+'_imgloc_subloc manual ID other')
             break
         
         os.chdir(datafile)
@@ -253,6 +256,9 @@ for wafer in wafers:
         count+=1
         
         print(wafer+': '+str(count)+' of '+str(len(filenames)))
+        
+        rows=zip(imgloc,subloc)
+        basic.WriteRows(rows,savedir2,str(wafer)+'_imgloc_subloc manual ID other')
         
         #if count>105:
         #    break
