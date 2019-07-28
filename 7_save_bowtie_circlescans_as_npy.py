@@ -56,7 +56,7 @@ print(wafers)
 
 points=72 #how many data points per sweep around a bowtie
 
-bowtie_data=np.full((0,(2*points)+6),0) #Shape of bowtie data is all of the bowtie line scan points, plus 6 for Wafer, Location, Sublocation, Pixel, theta_M and (non)bowtie identifier
+bowtie_data=np.full((0,(2*points)+10),0) #Shape of bowtie data is all of the bowtie line scan points, plus 6 for Wafer, Location, Sublocation, Pixel, theta_M and (non)bowtie identifier
 
 badbowcount=0
 for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
@@ -95,13 +95,14 @@ for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
             meanvals_45,thetas_45=basic.circlesweep(bow45,G,R,res=points,xdim=40,theta_naught=theta_M)
             
             bow_loc=[int(loc) for loc in bow0_file.split('_')[:4]]
+            bow_vals=[theta_M,thetas_0[np.argmax(meanvals_0)],thetas_45[np.argmax(meanvals_45)],np.std(bow0),np.std(bow45)]
             
             X=[]
-            X.extend(bow_loc)
-            X.append(theta_M)
-            X.extend(meanvals_0)
-            X.extend(meanvals_45)
-            X.append(identity[2])
+            X.extend(bow_loc) #Wafer, location, subloc, pixel
+            X.extend(bow_vals) #theta_M, theta0, theta 45, std0, std45
+            X.extend(meanvals_0) #circle sweep of shear 0
+            X.extend(meanvals_45) #circle sweep of shear 45
+            X.append(identity[2]) #bowtie or not (1|0)
             
             bowtie_data=np.append(bowtie_data,[X],axis=0)
 
@@ -112,9 +113,13 @@ location,
 sublocation on image,
 pixel index of bowtie,
 theta_M (rad),
+angle of maximum intensity in theta 0 circle sweep,
+angle of maximum intensity in theta 45 circle sweep,
+standard deviation of pixels in bow0 image,
+standard deviation of pixels in bow 45 image,
 shear 0 circle sweep, 
 shear 45 circle sweep,
 bowtie (1) or nonbowtie (0) ]]
 '''
 os.chdir(save_dir)
-np.save('wafer_loc_subloc_pixel_thetaM_shear0_shear45_bow-bool.npy',bowtie_data)
+np.save('wafer_loc_subloc_pixel_thetaM_theta0_theta45_std0_std45_shear0_shear45_bow-bool.npy',bowtie_data)
