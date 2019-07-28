@@ -67,7 +67,7 @@ else:
         if 'cSi' not in i:
             wafers.append(i)
 
-wafers=['17','27','50'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
+wafers=['50'] #TESTING PURPOSES ONLY CAN DELETE THIS LINE
 
 '''
 We are interested in saving images of boxed regions that do not contain bowties
@@ -152,7 +152,7 @@ for wafer in wafers:
             count+=1
             continue
         
-        if count>300:
+        if count>800:
             rows=zip(imgloc,subloc)
             basic.WriteRows(rows,savedir2,str(wafer)+'_imgloc_subloc manual ID other')
             break
