@@ -3,6 +3,35 @@
 Created on Sat Jul 27 00:02:58 2019
 
 @author: Logan Rowe
+
+Creates the numpy array that will be used as the basis of the machine learning training set.
+
+Returns X:
+    [[
+    wafer int, 
+    location of image int, 
+    sublocation on image int, 
+    pixel at center of bowtie int,
+    theta_M the angle of maximum intensity in the shear max image float (radians),
+    shear 0 circle sweep around bowtie 72 values floats,
+    shear 45 circle sweep around bowtie 72 values floats,
+    1 if a bowtie and 0 if nonbowtie
+    ],]
+    
+Synopsis:
+    1) Loads shear 0 and shear 45 (non)bowties from .npy files
+    2) Calculates shear max image from shear 0 and shear 45 images
+    3) Takes the average value of a line scan from the center of the bowtie and
+       repeats the process as the line scan is swept in a circular motion around
+       the bowtie
+    4) From the circle sweep of shear max (step 3) the angle theta_M is measured
+       at which the maximum intensity was observed in the shear max image
+    5) Circle sweep is done for shear 0 and shear 45 images starting at
+       theta_naught=theta_M such that all circle sweeps will start at the angle
+       of maximum intensity in the shear max image (this is done to achieve uniformity 
+       across bowties with different orientations)
+    6) Training data set is built up with the shape (N,150)
+       the 150 data points are listed in order under "Returns X:" above
 """
 
 import numpy as np
@@ -55,7 +84,8 @@ for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
             bowM=basic.shear_max_img(bow0,bow45) #Calculate shear max image from shear 0 and shear 45 images
             
             G=820 #index of central pixel (y_location*xdim+x_location) where y_loc and x_loc are both 20 and xdim is the width of the bowtie array
-            R=4
+            R=4 #Length (radius) of line that will be swept around the center of the bowtie [pixels]
+            
             meanvals_M,thetas_M=basic.circlesweep(bowM,G,R,res=points,xdim=40)
             
             theta_M=thetas_M[np.argmax(meanvals_M)] #The angle of maximum intensity as measured on the shear max bowtie shear 0 and shear 45 circle scan swill all start from this angle

@@ -3,6 +3,16 @@
 Created on Sat Jul 27 16:32:30 2019
 
 @author: Logan Rowe
+
+Update filenames to match your cloned file arrangement. After which script can be run as is.
+
+Will Save the Following Files:
+    1) Parametric plot of shear 0 vs shear 45 for every bowtie and non-bowtie in the training set
+    2) Line scans plot (green: shear 0, blue: shear 45, red: shear max) showing a sweep around the central pixel of bowties and non-bowties
+    3) Image of Shear 0
+    4) Image of Shear 45
+    
+Examples of the files saved can be seen in side-scripts/example-bowties
 """
 
 
