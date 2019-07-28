@@ -47,7 +47,7 @@ nonbowtiefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Waf
 
 savefile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\side-scripts\\bowtie-plots'
 
-X=np.load(datafile+'\\wafer_loc_subloc_pixel_shear0_shear45_bow-bool.npy')
+X=np.load(datafile+'\\wafer_loc_subloc_pixel_thetaM_shear0_shear45_bow-bool.npy')
 
 print(X.shape)
 

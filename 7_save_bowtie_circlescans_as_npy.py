@@ -111,9 +111,10 @@ Save data as npy file in the format of
 location,
 sublocation on image,
 pixel index of bowtie,
+theta_M (rad),
 shear 0 circle sweep, 
 shear 45 circle sweep,
 bowtie (1) or nonbowtie (0) ]]
 '''
 os.chdir(save_dir)
-np.save('wafer_loc_subloc_pixel_shear0_shear45_bow-bool.npy',bowtie_data)
+np.save('wafer_loc_subloc_pixel_thetaM_shear0_shear45_bow-bool.npy',bowtie_data)
