@@ -24,3 +24,7 @@
 * [ ]  Add example bowtie and non-bowtie image, circle scan, and parametric plot pair to README.md
 * [ ]  Add GIF of shear 0 shear 45 bowtie to show how to recognize a bowtie
 * [ ]  Add a GIF of shear 0 and shear 45 dust to show how to recognize dust
+
+
+* [ ]  Gaussian low pass filter and subtract from image (equivalent high pass filter)
+* [ ]  Standard deviation as feature for bowtie training set
