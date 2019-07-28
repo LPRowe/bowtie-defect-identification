@@ -3,16 +3,7 @@
 Created on Sat Jul 27 22:56:03 2019
 
 @author: Logan Rowe
-"""
 
-import numpy as np
-import os
-import sys
-
-datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images\\bowtie-training-data'
-X_=np.load(datafile+'\\wafer_loc_subloc_pixel_shear0_shear45_bow-bool.npy')
-
-'''
 BALANCING THE DATA SET
 
 There are currently W: (B,N) bowties&non-bowties identified for each wafer:
@@ -43,7 +34,15 @@ will remove the features that do not aid in bowtie identification:
 Finally we will reduce the resolution of the circle sweep by a variable factor
 of 2,3,4,6,8, or 9 and thus also reduce the total dimensions.
 
-'''
+"""
+
+import numpy as np
+import os
+import sys
+
+datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images\\bowtie-training-data'
+X_=np.load(datafile+'\\wafer_loc_subloc_pixel_shear0_shear45_bow-bool.npy')
+
 ##################################################################
 #  Create a separate array for each wafer's data
 ##################################################################
@@ -80,12 +79,12 @@ X=X[:,5:] #Keep only shear 0, shear 45 , and bowtie identifier
             
 ##################################################################
 #  Reduce the dimensionality of X by a factor of:
-#  2,3,4,6,8, or 9
+#  1, 2, 3, 4, 6, 8, or 9
 ##################################################################    
-reduce=3   
+reduce=1   
 mask=[bool((i)%reduce) for i in range(X.shape[1]-1)]
 mask=np.logical_not(mask).tolist()
 mask.append(True) #Always keep the bowtie identifier
 
 X=X[:,mask]
-            
+np.save(datafile+'\\sh0_sh45_bow-bool_train_'+str(int(144/reduce))+'_dim.npy',X)           
