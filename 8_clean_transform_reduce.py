@@ -42,7 +42,7 @@ import sys
 
 datafile='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images\\bowtie-training-data'
 X_=np.load(datafile+'\\wafer_loc_subloc_pixel_thetaM_theta0_theta45_std0_std45_shear0_shear45_bow-bool.npy')
-
+print(X_.shape)
 ##################################################################
 #  Create a separate array for each wafer's data
 ##################################################################
@@ -74,13 +74,13 @@ for W in set(X_[:,0]):
 #  Remove columns that will not be needed for training the 
 #  machine learning classifier
 ##################################################################
-X=X[:,5:] #Remove data related to wafer, location, sublocation and pixel index            
+X=X[:,4:] #Remove data related to wafer, location, sublocation and pixel index            
             
 ##################################################################
 #  Reduce the dimensionality of X by a factor of:
 #  1, 2, 3, 4, 6, 8, or 9
 ##################################################################    
-reduce=9
+reduce=1
 mask=[bool((i)%reduce) for i in range(X.shape[1]-6)] #Masks every 3rd (or reduce value) data point in the shear 0 and shear 45 sweeps
 mask=np.logical_not(mask).tolist()
 mask.append(True) #Always keep the bowtie identifier
