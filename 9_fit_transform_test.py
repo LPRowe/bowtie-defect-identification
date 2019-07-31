@@ -98,7 +98,7 @@ pipeline=Pipeline([('Imputer',SimpleImputer(strategy='mean')),
 '''
 
 pipeline=Pipeline([('Reducer',dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0'),
-                              reduced_circle_sweep_res=18)),
+                              reduced_circle_sweep_res=4)),
                    ('ThetaDiff',dp.combine_theta_peaks(combine_and_remove=False)),
                    ('Imputer',SimpleImputer(strategy='mean')),
                    ('Scaler',StandardScaler()),
@@ -129,9 +129,20 @@ test_x=pipeline.fit_transform(test_x)
 
 preds=clf.predict(test_x)
 
-count=0
+true_pos=0
+false_pos=0
+false_neg=0
 for (i,j) in zip(preds,test_y):
-    if i==j:
-        count+=1
+    if i==j and i==1:
+        true_pos+=1
+    elif i!=j and i==1:
+        false_pos+=1
+    elif i!=j and i==0:
+        false_neg+=1
 
-print(str(count/len(preds)))
+precision=true_pos/(true_pos+false_pos)
+recall=true_pos/(true_pos+false_neg)
+
+print('P:',str(precision))
+print('R:',str(recall))
+
