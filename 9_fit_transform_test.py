@@ -11,18 +11,20 @@ import sys
 import pandas as pd
 from pandas.plotting import scatter_matrix
 
-from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.svm import SVC
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.pipeline import Pipeline,FeatureUnion
 from sklearn.impute import SimpleImputer
 
+from sklearn.model_selection import cross_val_score,GridSearchCV,RandomizedSearchCV
+from sklearn.model_selection import StratifiedShuffleSplit
 
 from scipy.stats import expon,reciprocal
 
 import data_prep as dp
 
 from imp import reload
+reload(dp)
 
 
 
@@ -32,7 +34,7 @@ from imp import reload
 # LOAD DATA
 ################################################
 data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Images\\bowtie-training-data'
-X=np.load(data_dir+'\\thetaM_theta0_theta45_std0_std45_sh0_sh45_bow-bool_train_144_dim.npy')
+X_raw=np.load(data_dir+'\\thetaM_theta0_theta45_std0_std45_sh0_sh45_bow-bool_train_144_dim.npy')
 
 
 ################################################
@@ -61,7 +63,7 @@ c3=['sh45_{0}'.format(str(i)) for i in range(72)]
 c4=['bowties']
 column_names=c1+c2+c3+c4
 
-X=numpy_to_pd(X,column_names)
+X=numpy_to_pd(X_raw,column_names)
 
 ################################################
 # SPLIT DATA INTO TEST AND TRAIN BOTH BALANCED
@@ -71,37 +73,65 @@ split=StratifiedShuffleSplit(n_splits=1,test_size=0.2,random_state=42)
 for train_index, test_index in split.split(X,X['bowties']):
     train=X.loc[train_index]
     test=X.loc[test_index]
-    
-print(test.shape)
-    
-X_=dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0')).transform(test)
-X_=dp.combine_theta_peaks().transform(X_)
+
+y=train['bowties']  
+X=train.drop(columns='bowties')
+
+'''
+X=dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0'),
+                              reduced_circle_sweep_res=4).transform(X)
+X=dp.combine_theta_peaks(combine_and_remove=False).transform(X)
 
 
-corr_matrix=X_.corr()
-#corr_vals=corr_matrix['bowties'].sort_values(ascending=False)
-#print(corr_vals)
-print(X_.shape)
+corr_matrix=X.corr()
+corr_vals=corr_matrix['bowties'].sort_values(ascending=False)
+print(corr_vals)
+'''
 
-'''    
+'''
 pipeline=Pipeline([('Imputer',SimpleImputer(strategy='mean')),
-        ('Reduce Features',dp.reduce_features_in_sweep(reduced_circle_sweep_res=2, first_index_of_sweep_in_X=list(X.columns).index('sh0_0'))),
+                   ('Reducer',dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0'),
+                              reduced_circle_sweep_res=4)),
+                   ('ThetaDiff',dp.combine_theta_peaks(combine_and_remove=False)),
+                   ('Scaler',StandardScaler()),
                    ])
 '''
 
+pipeline=Pipeline([('Reducer',dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0'),
+                              reduced_circle_sweep_res=18)),
+                   ('ThetaDiff',dp.combine_theta_peaks(combine_and_remove=False)),
+                   ('Imputer',SimpleImputer(strategy='mean')),
+                   ('Scaler',StandardScaler()),
+                   ])
 
 
-#Attribute Adder
-##Generate new attribute absolute difference of shear0 and shear 45 max points
-#Attribute Remover
+X_trans=pipeline.fit_transform(X)
 
-
-
-'''
 param_distribs={'kernel':['rbf'],
                 'gamma':expon(scale=1.0),
                 'C':reciprocal(20,200000),
                 }
 
-svm_reg=SVC()
-'''
+
+svm_classifier=SVC()
+rand_search=RandomizedSearchCV(svm_classifier,param_distributions=param_distribs,n_iter=10,cv=5,scoring='neg_mean_squared_error',verbose=2,n_jobs=4,random_state=42)
+rand_search.fit(X_trans,y)
+print(rand_search.best_params_)
+#'C': 329.6089285595793, 'gamma': 0.7439278308608545, 'kernel': 'rbf'
+params=rand_search.best_params_
+
+clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
+clf.fit(X_trans,y)
+
+test_y=test['bowties']
+test_x=test.drop(columns='bowties')
+test_x=pipeline.fit_transform(test_x)
+
+preds=clf.predict(test_x)
+
+count=0
+for (i,j) in zip(preds,test_y):
+    if i==j:
+        count+=1
+
+print(str(count/len(preds)))

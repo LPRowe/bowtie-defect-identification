@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 class reduce_features_in_sweep(BaseEstimator,TransformerMixin):
-    def __init__(self,reduced_circle_sweep_res=2,first_index_of_sweep_in_X=5,bowtie_identifier=True):
+    def __init__(self,reduced_circle_sweep_res=2,first_index_of_sweep_in_X=5,bowtie_identifier=False):
         self.reduced_res=reduced_circle_sweep_res #Reduce the resolution of the circle sweep by a factor of 1,2,3,4,6,8, or 9
         self.first_index=first_index_of_sweep_in_X #X[:,?] is the index that the bowtie circle sweep starts on
         self.bowtie_identifier=bowtie_identifier #Is the identifier (bowtie: 1, nonbowtie: 0) included in X or already split from X
@@ -38,18 +38,12 @@ class combine_theta_peaks(BaseEstimator,TransformerMixin):
     def fit(self,X,y=None):
         return self
     def transform(self,X):
-        theta_0=X['theta0'].dropna().tolist()
-        theta_45=X['theta45'].dropna().tolist()
-        theta_abs=[abs(i-j) for (i,j) in zip(theta_0,theta_45)]
-        theta_abs=pd.DataFrame(dict({'thetaDiff':theta_abs}))
+        theta_abs=[abs(i) for i in (X['theta0']-X['theta45']).tolist()]
+        #theta_abs=pd.DataFrame(dict({'thetaDiff':theta_abs}))
         if self.remove:
-            #X_=np.c_[X['thetaM'],X['std0':],theta_abs]
-            #X_=pd.join(X['thetaM'],theta_abs,X[X.columns[list(X.columns).index('sh0_0'):]])
-            X_=X['thetaM'].join(theta_abs)
-            X_=X_.join(X[X.columns[list(X.columns).index('sh0_0'):]])
-            return X_
+            X['thetaDiff']=theta_abs
+            X=X.drop(['theta0','theta45'],axis=1)
+            return X
         else:
-            #X_=pd.join(X['thetaM','theta0','theta45'],theta_abs,X[X.columns[list(X.columns).index('sh0_0'):]])
-            #X_=X[['thetaM','theta0','theta45']].join([theta_abs,X[list(X.columns)[list(X.columns).index('sh0_0'):]]])
-            X_=pd.concat([X[['thetaM','theta0','theta45']],theta_abs],sort=False)
-            return X_
+            X['thetaDiff']=theta_abs
+            return X
