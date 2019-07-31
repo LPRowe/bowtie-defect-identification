@@ -19,6 +19,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import cross_val_score,GridSearchCV,RandomizedSearchCV
 from sklearn.model_selection import StratifiedShuffleSplit
 
+from sklearn.metrics import precision_score, recall_score, f1_score
+
 from scipy.stats import expon,reciprocal
 
 import data_prep as dp
@@ -142,6 +144,9 @@ for (i,j) in zip(preds,test_y):
 
 precision=true_pos/(true_pos+false_pos)
 recall=true_pos/(true_pos+false_neg)
+
+P,R,F=precision_score(test_y,preds),recall_score(test_y,preds),f1_score(test_y,preds)
+
 
 print('P:',str(precision))
 print('R:',str(recall))
