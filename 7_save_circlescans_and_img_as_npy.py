@@ -55,8 +55,10 @@ print(wafers)
 
 
 points=72 #how many data points per sweep around a bowtie
+bs=8      #Sidelength of box-array around each bowtie
 
 bowtie_data=np.full((0,(2*points)+10),0) #Shape of bowtie data is all of the bowtie line scan points, plus 6 for Wafer, Location, Sublocation, Pixel, theta_M and (non)bowtie identifier
+image_data=np.full((0,(bs**2)*2+7),0)    #wafer, location, sublocation, pixel, standard deviation 0, sandard deviation 45, shear0 image (8,8), shear45 image (8x8), (non)bowtie identifier
 
 badbowcount=0
 for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
@@ -105,6 +107,24 @@ for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
             X.append(identity[2]) #bowtie or not (1|0)
             
             bowtie_data=np.append(bowtie_data,[X],axis=0)
+            
+            ########################################
+            # Crop 8x8 images of sh0, sh45 and save
+            # second data set
+            ########################################
+            
+            xdim=bow0.shape[1]
+            xmin,xmax=int((G//xdim)-(0.5*bs)),int((G//xdim)+(0.5*bs))
+            ymin,ymax=int(0.5*(xdim-bs)),int(0.5*(xdim+bs))
+            crop0,crop45=bow0[ymin:ymax,xmin:xmax],bow45[ymin:ymax,xmin:xmax]
+            
+            X2=[]
+            X2.extend(bow_loc)
+            X2.extend()
+            image_data=np.append(image_data,[],axis=0)
+            
+            
+            
 
 '''
 Save data as npy file in the format of 
