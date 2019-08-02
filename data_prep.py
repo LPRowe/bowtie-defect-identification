@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
 
-import skimage
+import skimage.measure
 
 def prec_rec_f(predictions,actual):
     '''
@@ -93,7 +93,7 @@ class max_pooling(BaseEstimator,TransformerMixin):
         sh0_mask=['sh0' in i for i in X.columns.tolist()]
         
         #only columns that contain sh45 data
-        sh45_mask=['sh0' in i for i in X.columns.tolist()]
+        sh45_mask=['sh45' in i for i in X.columns.tolist()]
 
         #Make spearate pandas DF for shear 0 and shear 45 data
         X_sh0=X[X.columns[sh0_mask]]
@@ -103,13 +103,35 @@ class max_pooling(BaseEstimator,TransformerMixin):
         X_sh0=np.array(X_sh0)
         X_sh45=np.array(X_sh45)
         
-        #Reshape into the 2D array image
-        X_sh0=np.reshape(X_sh0,(self.image_side_length,self.image_side_length))
-        X_sh45=np.reshape(X_sh45,(self.image_side_length,self.image_side_length))
+        block_reduced_0=[]
+        block_reduced_45=[]
+        for (i0,i45) in zip(X_sh0,X_sh45):
+            #Reshape into the a list of 2D array images
+            i0=np.reshape(i0,(self.image_side_length,self.image_side_length))
+            i45=np.reshape(i45,(self.image_side_length,self.image_side_length))
         
-        #MaxPool each 2 by 2 region
-        skimage.
+            #MaxPool each 2 by 2 region
+            i0=skimage.measure.block_reduce(i0,(self.pool_side_length,self.pool_side_length),np.max)
+            i45=skimage.measure.block_reduce(i45,(self.pool_side_length,self.pool_side_length),np.max)  
+            
+            #Reshape back into a list
+            i0=i0.reshape((1,-1))
+            i45=i45.reshape((1,-1))
+            
+            #Add max_pooled images to lists to be added to array
+            block_reduced_0.extend(i0)
+            block_reduced_45.extend(i45)
         
+        max_pooled_0=block_reduced_0.reshape((-1,int(self.image_side_length**2)))
+        max_pooled_45=block_reduced_45.reshape((-1,int(self.image_side_length**2)))
+        
+        #COMBINE MAX POOLED IMAGES WITH STANDARD DEVIATION SERIES AND RETURN NUMPY ARRAY
+        sh_mask=np.array(sh0_mask)+np.array(sh45_mask)
+        X_=np.c_[X[X.columns[~sh_mask]],max_pooled_0,max_pooled_45]
+        
+        return X_
+
+            
         
         
         
