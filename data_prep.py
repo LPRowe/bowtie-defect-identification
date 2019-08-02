@@ -87,8 +87,24 @@ class max_pooling(BaseEstimator,TransformerMixin):
         self.pool_side_length=pool_side_length
         self.image_side_length=image_side_length
     def fit(self,X,y=None):
-        return self.X
-    def transform(self, X, y=None):
+        return self
+    def transform(self,X):
+        if self.pool_side_length==1:
+            #Effectively turns off max_pooling
+            return X
+        if self.pool_side_length==self.image_side_length:
+            #Effectively highest pixel value in array
+            
+            #Maximum of sh0 values
+            sh0_mask=['sh0' in i for i in X.columns.tolist()]
+            X_sh0_max=X[X.columns[sh0_mask]].max(axis=1)
+
+            #Maximum of sh45 values
+            sh45_mask=['sh45' in i for i in X.columns.tolist()]
+            X_sh45_max=X[X.columns[sh45_mask]].max(axis=1)
+            
+            return np.c_[X[['std0','std45']],X_sh0_max,X_sh45_max]
+        
         #only columns that contain sh0 data
         sh0_mask=['sh0' in i for i in X.columns.tolist()]
         
@@ -122,11 +138,16 @@ class max_pooling(BaseEstimator,TransformerMixin):
             block_reduced_0.extend(i0)
             block_reduced_45.extend(i45)
         
-        max_pooled_0=block_reduced_0.reshape((-1,int(self.image_side_length**2)))
-        max_pooled_45=block_reduced_45.reshape((-1,int(self.image_side_length**2)))
+        self.pixels_per_image=int((self.image_side_length/self.pool_side_length)**2)
+        
+        max_pooled_0=np.reshape(block_reduced_0,(-1,int(self.pixels_per_image)))
+        max_pooled_45=np.reshape(block_reduced_45,(-1,int(self.pixels_per_image)))
+        print(max_pooled_0.shape)
+        
         
         #COMBINE MAX POOLED IMAGES WITH STANDARD DEVIATION SERIES AND RETURN NUMPY ARRAY
         sh_mask=np.array(sh0_mask)+np.array(sh45_mask)
+        print(X[X.columns[~sh_mask]].shape)
         X_=np.c_[X[X.columns[~sh_mask]],max_pooled_0,max_pooled_45]
         
         return X_
