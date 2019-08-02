@@ -44,6 +44,26 @@ def prec_rec_f(predictions,actual):
     
     return (precision,recall,f1)
 
+
+def numpy_to_pd(array,column_names):
+    '''
+    Converts a numpy array to a pandas dataframe given an array and list of column names.
+    
+    array: numpy array
+    column_names: list of strings where each item is a column name
+    
+    Example:
+        array=np.array([[1,2],[3,4]])
+        column_names=['c_1','c_2']
+        X=numpy_to_pd(array,column_names)
+        print(X)
+        >>>pandas.DataFrame(dict({'c_1':[1,3],'c_2':[2,4]}))
+    '''
+    pd_dict=dict()
+    for (name,index) in zip(column_names,range(len(column_names))):
+        pd_dict[name]=array[:,index]
+    return pd.DataFrame(pd_dict)
+
 class reduce_features_in_sweep(BaseEstimator,TransformerMixin):
     def __init__(self,reduced_circle_sweep_res=2,first_index_of_sweep_in_X=5,bowtie_identifier=False):
         self.reduced_res=reduced_circle_sweep_res #Reduce the resolution of the circle sweep by a factor of 1,2,3,4,6,8, or 9
