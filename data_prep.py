@@ -11,6 +11,37 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
 
+def prec_rec_f(predictions,actual):
+    '''
+    Takes predicted values from classifer and actual values from data set
+    
+    Returns: (precision_score, recall_score, f1_score)
+    
+    predictions=[1,1,0,0]
+    actual=[1,0,0,0]
+    P,R,F=prec_rec_f(predictions,actual)
+    
+        (P,R,F)
+        >>>(1.0, 0.5, 0.6666666666666666)
+    '''
+    
+    true_pos=0
+    false_pos=0
+    false_neg=0
+    for (i,j) in zip(predictions,actual):
+        if i==j and i==1:
+            true_pos+=1
+        elif i!=j and i==1:
+            false_pos+=1
+        elif i!=j and i==0:
+            false_neg+=1
+
+    precision=true_pos/(true_pos+false_pos)
+    recall=true_pos/(true_pos+false_neg)
+    f1=(2*precision*recall/(precision+recall))
+    
+    return (precision,recall,f1)
+
 class reduce_features_in_sweep(BaseEstimator,TransformerMixin):
     def __init__(self,reduced_circle_sweep_res=2,first_index_of_sweep_in_X=5,bowtie_identifier=False):
         self.reduced_res=reduced_circle_sweep_res #Reduce the resolution of the circle sweep by a factor of 1,2,3,4,6,8, or 9
@@ -47,3 +78,8 @@ class combine_theta_peaks(BaseEstimator,TransformerMixin):
         else:
             X['thetaDiff']=theta_abs
             return X
+        
+        
+if __name__ == '__main__':
+    print(prec_rec_f([1,0,0,0],[1,1,0,0]))
+    
