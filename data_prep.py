@@ -11,6 +11,8 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
 
+import skimage
+
 def prec_rec_f(predictions,actual):
     '''
     Takes predicted values from classifer and actual values from data set
@@ -78,6 +80,79 @@ class combine_theta_peaks(BaseEstimator,TransformerMixin):
         else:
             X['thetaDiff']=theta_abs
             return X
+        
+        
+class max_pooling(BaseEstimator,TransformerMixin):
+    def __init__(self,pool_side_length=2,image_side_length=8):
+        self.pool_side_length=pool_side_length
+        self.image_side_length=image_side_length
+    def fit(self,X,y=None):
+        return self.X
+    def transform(self, X, y=None):
+        #only columns that contain sh0 data
+        sh0_mask=['sh0' in i for i in X.columns.tolist()]
+        
+        #only columns that contain sh45 data
+        sh45_mask=['sh0' in i for i in X.columns.tolist()]
+
+        #Make spearate pandas DF for shear 0 and shear 45 data
+        X_sh0=X[X.columns[sh0_mask]]
+        X_sh45=X[X.columns[sh45_mask]]
+        
+        #Convert to 1D numpy array
+        X_sh0=np.array(X_sh0)
+        X_sh45=np.array(X_sh45)
+        
+        #Reshape into the 2D array image
+        X_sh0=np.reshape(X_sh0,(self.image_side_length,self.image_side_length))
+        X_sh45=np.reshape(X_sh45,(self.image_side_length,self.image_side_length))
+        
+        #MaxPool each 2 by 2 region
+        skimage.
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
 if __name__ == '__main__':
