@@ -62,7 +62,7 @@ image_data=np.full((0,(bs**2)*2+7),0)    #wafer, location, sublocation, pixel, s
 
 badbowcount=0
 for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
-    print(str(badbowcount),'bowties were rejected')
+    print(str(badbowcount),'bowties were rejected due to array shape')
     for wafer in wafers:
         badbowcount=0
         print("Starting",wafer,identity[0])
@@ -120,14 +120,17 @@ for identity in [('bowties',bowtie_dir,1),('nonbowties',nonbowtie_dir,0)]:
             
             X2=[]
             X2.extend(bow_loc)
-            X2.extend()
-            image_data=np.append(image_data,[],axis=0)
+            X2.extend(bow_vals[-2:])
+            X2.extend(np.reshape(crop0,(1,-1))[0].tolist())
+            X2.extend(np.reshape(crop45,(1,-1))[0].tolist())
+            X2.append(identity[2])
+            image_data=np.append(image_data,[X2],axis=0)
             
             
             
 
 '''
-Save data as npy file in the format of 
+Save bowtie circle scan data as npy file in the format of 
 [[ wafer,
 location,
 sublocation on image,
@@ -141,5 +144,19 @@ shear 0 circle sweep,
 shear 45 circle sweep,
 bowtie (1) or nonbowtie (0) ]]
 '''
-os.chdir(save_dir)
-np.save('wafer_loc_subloc_pixel_thetaM_theta0_theta45_std0_std45_shear0_shear45_bow-bool.npy',bowtie_data)
+np.save(save_dir+'\\wafer_loc_subloc_pixel_thetaM_theta0_theta45_std0_std45_shear0_shear45_bow-bool.npy',bowtie_data)
+
+'''
+Save bowtie image data as npy file in the format of 
+[[ wafer,
+location,
+sublocation on image,
+pixel index of bowtie,
+standard deviation of pixels in bow0 image,
+standard deviation of pixels in bow 45 image,
+shear 0 8x8 image, 
+shear 45 8x8 image,
+bowtie (1) or nonbowtie (0) ]]
+'''
+
+np.save(save_dir+'\\wafer_loc_subloc_pixel_std0_std45_shear0_shear45_bow-bool.npy',image_data)
