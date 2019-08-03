@@ -51,11 +51,11 @@ c4=['bowties']
 column_names=c1+c2+c3+c4
 
 #if seeking optimal parameters for resolution reduction then True
-seeking=False
+seeking=True
 
 if seeking:
     res_reduct_performance=dict()
-    for res in [9,8,6,4,3,2,1]:
+    for max_leaf_nodes in [6,8,10,12,16,20,30,40,60,100]:
         print('Starting resolution reduction of',str(res))
         
         X=dp.numpy_to_pd(X_raw,column_names)
