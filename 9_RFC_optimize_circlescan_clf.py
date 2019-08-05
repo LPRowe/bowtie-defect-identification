@@ -78,16 +78,20 @@ if seeking:
                     'max_depth':[6,8,10,12,14],
                     }
     '''
-    param_grid={'max_depth':[6,7,8,9,10],
-                'bootstrap':[True,False]}
+    param_grid={'max_depth':[None],
+                'bootstrap':[True,False],
+                'criterion':['gini','entropy']
+                }
+    
+    
         
-    rnd_clf=RandomForestClassifier(n_estimators=10,n_jobs=-1,max_features='sqrt',random_state=42)
+    rnd_clf=RandomForestClassifier(n_estimators=50,n_jobs=-1,max_features='log2',random_state=42)
     grid_search=GridSearchCV(rnd_clf,param_grid=param_grid,cv=5,scoring='f1',verbose=2,n_jobs=-1,iid=True)
     grid_search.fit(X_train_trans,y_train)
     
     params=grid_search.best_params_
     
-    clf=RandomForestClassifier(bootstrap=params['bootstrap'],max_depth=params['max_depth'],n_estimators=100,n_jobs=-1,max_features='sqrt',random_state=42)
+    clf=RandomForestClassifier(criterion=params['criterion'],bootstrap=params['bootstrap'],max_depth=params['max_depth'],n_estimators=500,n_jobs=-1,max_features='log2',random_state=42)
     clf.fit(X_train_trans,y_train)
     
     y_test=test['bowties']
@@ -101,36 +105,8 @@ if seeking:
 
     print(P,R,F,F_CV,params)
 
-final_params_selected=False
+final_params_selected=True
 if final_params_selected:
-    X=dp.numpy_to_pd(X_raw,column_names)
-    
-    ################################################
-    # SPLIT DATA INTO TEST AND TRAIN BOTH BALANCED
-    # WITH RESPECT TO (NON)BOWTIES
-    # RETAINING SPLIT FOR ENSEMBLE PURPOSES
-    ################################################
-    split=StratifiedShuffleSplit(n_splits=1,test_size=0.2,random_state=42)
-    for train_index, test_index in split.split(X,X['bowties']):
-        train=X.loc[train_index]
-        test=X.loc[test_index]
-    
-    y_train=train['bowties']  
-    X_train=train.drop(columns='bowties')
-    
-    pipeline=Pipeline([('Reducer',dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0'),
-                                  reduced_circle_sweep_res=res)),
-                       ('ThetaDiff',dp.combine_theta_peaks(combine_and_remove=False)),
-                       ('Imputer',SimpleImputer(strategy='mean')),
-                       ('Scaler',StandardScaler()),
-                       ])
-    
-    
-    X_train_trans=pipeline.fit_transform(X_train)
-        
-    clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
-    clf.fit(X_train_trans,y_train)
-    
-    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_circlesweep_res-"+str(res)+"_classifier.pkl")
+    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\RF_circle_sweep_classifier")
 
     
