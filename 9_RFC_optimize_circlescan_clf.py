@@ -80,7 +80,8 @@ if seeking:
     '''
     param_grid={'max_depth':[None],
                 'bootstrap':[True,False],
-                'criterion':['gini','entropy']
+                'criterion':['entropy','gini'],
+                'min_samples_leaf':[5]
                 }
     
     
@@ -104,6 +105,8 @@ if seeking:
     P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
 
     print(P,R,F,F_CV,params)
+    #0.7772277227722773 0.8134715025906736 0.7949367088607595 0.7961640752734754 {'bootstrap': True, 'criterion': 'gini', 'max_depth': None, 'min_samples_leaf': 5}
+    
 
 final_params_selected=True
 if final_params_selected:
