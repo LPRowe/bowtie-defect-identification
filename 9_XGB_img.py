@@ -32,6 +32,7 @@ reload(dp)
 
 import matplotlib.pyplot as plt
 
+import xgboost
 
 ################################################
 # LOAD DATA
@@ -81,7 +82,7 @@ if seeking:
     
     
         
-    rnd_clf=RandomForestClassifier(n_estimators=10,n_jobs=-1,max_features='log2',random_state=42)
+    xg_clf=RandomForestClassifier(n_estimators=10,n_jobs=-1,max_features='log2',random_state=42)
     grid_search=GridSearchCV(rnd_clf,param_grid=param_grid,cv=5,scoring='f1',verbose=2,n_jobs=-1,iid=True)
     grid_search.fit(X_train_trans,y_train)
     
