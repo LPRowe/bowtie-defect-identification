@@ -32,7 +32,6 @@ reload(dp)
 
 import matplotlib.pyplot as plt
 
-
 ################################################
 # LOAD DATA
 ################################################
@@ -87,7 +86,7 @@ if seeking:
     
     params=grid_search.best_params_
     
-    clf=RandomForestClassifier(n_estimators=500,min_samples_leaf=params['min_samples_leaf'],criterion=params['criterion'],bootstrap=params['bootstrap'],max_depth=params['max_depth'],n_jobs=-1,max_features=params['max_features'],random_state=42)
+    clf=RandomForestClassifier(**params,n_estimators=500,n_jobs=-1,random_state=42)
     clf.fit(X_train_trans,y_train)
     
     y_test=test['bowties']

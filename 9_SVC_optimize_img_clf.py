@@ -113,7 +113,8 @@ if seeking:
         
         params=rand_search.best_params_
         
-        clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
+        #clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
+        clf=SVC(**params)
         clf.fit(X_train_trans,y_train)
         
         y_test=test['bowties']
