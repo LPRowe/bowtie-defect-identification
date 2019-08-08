@@ -86,6 +86,17 @@ if seeking:
     
     
     X_train_trans=pipeline.fit_transform(X_train)
+    X_val_trans=pipeline.fit_transform(X_val)
+    
+    # =========================================================================
+    # Convert back to panda dataframe because XGBoost and Scipy dont play nice
+    # =========================================================================
+    
+    column_names_xgb=['f{}'.format(int(i)) for i in range(130)]
+    
+    X_train_trans=dp.numpy_to_pd(X_train_trans,column_names_xgb)
+    X_val_trans=dp.numpy_to_pd(X_val_trans,column_names_xgb)
+
     
     
     param_grid={'max_depth': [7],
@@ -120,7 +131,7 @@ if seeking:
     
     #clf=xgboost.XGBRFClassifier(**params,n_estimators=100,n_jobs=-1,random_state=42)
     clf=xgboost.XGBRFClassifier(**params)
-    clf.fit(X_train_trans,y_train)
+    clf.fit(X_train_trans,y_train,early_stopping_rounds=10,eval_set=[(X_val_trans,y_val)])
     
     y_test=test['bowties']
     X_test=test.drop(columns='bowties')
@@ -136,7 +147,24 @@ if seeking:
     #0.8366336633663366 0.8756476683937824 0.8556962025316456 0.8352625965436676 {'_Booster': None, 'base_score': 0.5, 'colsample_bylevel': 1, 'colsample_bynode': 0.8, 'colsample_bytree': 1, 'gamma': 0, 'importance_type': 'gain', 'learning_rate': 0.05, 'max_delta_step': 0, 'max_depth': 6, 'min_child_weight': 5, 'n_estimators': 100, 'n_jobs': 1, 'nthread': None, 'objective': 'binary:logistic', 'random_state': 42, 'reg_alpha': 0, 'reg_lambda': 1, 'scale_pos_weight': 1, 'silent': None, 'subsample': 0.8, 'verbosity': 1}
     #0.8439024390243902 0.8963730569948186 0.8693467336683416 0.8497798540354795 {'_Booster': None, 'base_score': 0.5, 'colsample_bylevel': 1, 'colsample_bynode': 0.2, 'colsample_bytree': 1, 'gamma': 0, 'importance_type': 'gain', 'learning_rate': 0.05, 'max_delta_step': 0, 'max_depth': 7, 'min_child_weight': 5, 'n_estimators': 100, 'n_jobs': 1, 'nthread': None, 'objective': 'binary:logistic', 'random_state': 42, 'reg_alpha': 0, 'reg_lambda': 1, 'scale_pos_weight': 1, 'silent': None, 'subsample': 0.8, 'verbosity': 1}
     
-final_params_selected=True
+# =============================================================================
+#  Run again with more estimators and early stopping to check for over fitting
+# =============================================================================
+params['n_estimators']=5000
+
+#clf=xgboost.XGBRFClassifier(**params,n_estimators=100,n_jobs=-1,random_state=42)
+clf=xgboost.XGBRFClassifier(**params)
+clf.fit(X_train_trans,y_train,early_stopping_rounds=10,eval_set=[(X_val_trans,y_val)])
+
+y_preds=clf.predict(X_test)
+
+F_CV=grid_search.best_score_    
+P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
+
+print(P,R,F,F_CV,params)
+
+
+final_params_selected=False
 if final_params_selected:
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBRF_img_classifier.pkl")
 
