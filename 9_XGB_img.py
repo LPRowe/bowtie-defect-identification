@@ -51,21 +51,36 @@ c3=['sh45_{0}'.format(str(i)) for i in range(64)]
 c4=['bowties']
 column_names=c1+c2+c3+c4
 
+
+
+
 seeking=True
 if seeking:
     X=dp.numpy_to_pd(X_raw,column_names)
     
-    ################################################
-    # SPLIT DATA INTO TEST AND TRAIN BOTH BALANCED
-    # WITH RESPECT TO (NON)BOWTIES
-    ################################################
+    # =============================================================================
+    #     SPLIT DATA INTO TEST AND TRAIN BOTH BALANCED
+    #     WITH RESPECT TO (NON)BOWTIES
+    # =============================================================================
+    
     split=StratifiedShuffleSplit(n_splits=1,test_size=0.2,random_state=42)
     for train_index, test_index in split.split(X,X['bowties']):
         train=X.loc[train_index]
         test=X.loc[test_index]
     
+    # =========================================================================
+    #     Split the training set into training and validation subsets
+    # =========================================================================
+    split=StratifiedShuffleSplit(n_splits=1,test_size=0.2,random_state=42)
+    for train_index, test_index in split.split(train,train['bowties']):
+        train=X.loc[train_index]
+        train_val=X.loc[test_index]
+    
     y_train=train['bowties']  
     X_train=train.drop(columns='bowties')
+    
+    y_val=train_val['bowties']
+    X_val=train_val.drop(columns='bowties')
     
     pipeline=Pipeline([('Imputer',SimpleImputer(strategy='mean'))])
     
@@ -73,22 +88,38 @@ if seeking:
     X_train_trans=pipeline.fit_transform(X_train)
     
     
-    param_grid={'max_depth':[8],
-                'bootstrap':[True,False],
-                'criterion':['gini','entropy'],
-                'min_samples_leaf':[9],
-                'max_features':['log2']
-                }
-    
+    param_grid={'max_depth': [7],
+     'learning_rate': [0.05],
+     'n_estimators': [100],
+     'verbosity': [1],
+     'silent': [None],
+     'objective': ['binary:logistic'],
+     'gamma': [0],
+     'min_child_weight': [5],
+     'max_delta_step': [0],
+     'subsample': [0.8],
+     'colsample_bytree': [1],
+     'colsample_bylevel': [1],
+     'colsample_bynode': [0.2],
+     'reg_alpha': [0],
+     'reg_lambda': [1],
+     'scale_pos_weight': [1],
+     'base_score': [0.5],
+     '_Booster': [None],
+     'random_state': [42],
+     'nthread': [None],
+     'n_jobs': [1],
+     'importance_type': ['gain']}
     
         
-    xg_clf=RandomForestClassifier(n_estimators=10,n_jobs=-1,max_features='log2',random_state=42)
-    grid_search=GridSearchCV(rnd_clf,param_grid=param_grid,cv=5,scoring='f1',verbose=2,n_jobs=-1,iid=True)
+    xgb_clf=xgboost.XGBRFClassifier()
+    grid_search=GridSearchCV(xgb_clf,param_grid=param_grid,cv=5,scoring='f1',verbose=2,n_jobs=-1,iid=True)
     grid_search.fit(X_train_trans,y_train)
     
     params=grid_search.best_params_
     
-    clf=RandomForestClassifier(**params,n_estimators=500,n_jobs=-1,random_state=42)
+    #clf=xgboost.XGBRFClassifier(**params,n_estimators=100,n_jobs=-1,random_state=42)
+    clf=xgboost.XGBRFClassifier(**params)
     clf.fit(X_train_trans,y_train)
     
     y_test=test['bowties']
@@ -101,10 +132,12 @@ if seeking:
     P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
 
     print(P,R,F,F_CV,params)
-    #0.8076923076923077 0.8704663212435233 0.8379052369077307 0.8340339418922611 {'bootstrap': True, 'criterion': 'gini', 'max_depth': 8, 'max_features': 'log2', 'min_samples_leaf': 9}    
-
+    #0.8374384236453202 0.8808290155440415 0.8585858585858585 0.8345152519028066 {'_Booster': None, 'base_score': 0.5, 'colsample_bylevel': 1, 'colsample_bynode': 0.8, 'colsample_bytree': 1, 'gamma': 0, 'importance_type': 'gain', 'learning_rate': 0.05, 'max_delta_step': 0, 'max_depth': 7, 'min_child_weight': 5, 'n_estimators': 100, 'n_jobs': 1, 'nthread': None, 'objective': 'binary:logistic', 'random_state': 42, 'reg_alpha': 0, 'reg_lambda': 1, 'scale_pos_weight': 1, 'silent': None, 'subsample': 0.8, 'verbosity': 1}
+    #0.8366336633663366 0.8756476683937824 0.8556962025316456 0.8352625965436676 {'_Booster': None, 'base_score': 0.5, 'colsample_bylevel': 1, 'colsample_bynode': 0.8, 'colsample_bytree': 1, 'gamma': 0, 'importance_type': 'gain', 'learning_rate': 0.05, 'max_delta_step': 0, 'max_depth': 6, 'min_child_weight': 5, 'n_estimators': 100, 'n_jobs': 1, 'nthread': None, 'objective': 'binary:logistic', 'random_state': 42, 'reg_alpha': 0, 'reg_lambda': 1, 'scale_pos_weight': 1, 'silent': None, 'subsample': 0.8, 'verbosity': 1}
+    #0.8439024390243902 0.8963730569948186 0.8693467336683416 0.8497798540354795 {'_Booster': None, 'base_score': 0.5, 'colsample_bylevel': 1, 'colsample_bynode': 0.2, 'colsample_bytree': 1, 'gamma': 0, 'importance_type': 'gain', 'learning_rate': 0.05, 'max_delta_step': 0, 'max_depth': 7, 'min_child_weight': 5, 'n_estimators': 100, 'n_jobs': 1, 'nthread': None, 'objective': 'binary:logistic', 'random_state': 42, 'reg_alpha': 0, 'reg_lambda': 1, 'scale_pos_weight': 1, 'silent': None, 'subsample': 0.8, 'verbosity': 1}
+    
 final_params_selected=True
 if final_params_selected:
-    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\RF_img_classifier")
+    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBRF_img_classifier.pkl")
 
     

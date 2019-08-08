@@ -105,6 +105,6 @@ if seeking:
 
 final_params_selected=True
 if final_params_selected:
-    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\ETC_circlesweep_classifier")
+    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\ETC_circlesweep_classifier.pkl")
 
     
