@@ -87,6 +87,7 @@ if seeking:
     
     X_train_trans=pipeline.fit_transform(X_train)
     X_val_trans=pipeline.fit_transform(X_val)
+    X_test_trans=pipeline.fit_transform(X_test)
     
     # =========================================================================
     # Convert back to panda dataframe because XGBoost and Scipy dont play nice
@@ -96,6 +97,7 @@ if seeking:
     
     X_train_trans=dp.numpy_to_pd(X_train_trans,column_names_xgb)
     X_val_trans=dp.numpy_to_pd(X_val_trans,column_names_xgb)
+    X_test_trans=dp.numpy_to_pd(X_test_trans,column_names_xgb)
 
     
     
@@ -153,11 +155,10 @@ if seeking:
 params['n_estimators']=1000
 
 #clf=xgboost.XGBRFClassifier(**params,n_estimators=100,n_jobs=-1,random_state=42)
-clf=xgboost.XGBRFClassifier(**params,early_stopping_rounds=10,verbose=True)
-clf.fit(X_train_trans,y_train,eval_set=[(X_train_trans,y_train),(X_val_trans,y_val)],eval_metric='error',verbose=True)
+clf=xgboost.XGBRFClassifier(**params)
+eval_set=[(X_train_trans,y_train),(X_val_trans,y_val),(X_test_trans,y_test)]
+clf.fit(X_train_trans,y_train,eval_set=eval_set,eval_metric=['error','logloss'],verbose=True,early_stopping_rounds=10)
 evals_result=clf.evals_result()
-val_errors=evals_result['validation_1']['error']
-print(val_errors)
 
 
 y_preds=clf.predict(X_test)
@@ -168,8 +169,40 @@ P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_te
 print(P,R,F,F_CV,params)
 
 
-final_params_selected=False
+final_params_selected=True
 if final_params_selected:
-    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBRF_img_classifier.pkl")
-
+    # =============================================================================
+    #  Combine training and validation sets to increase training data
+    # =============================================================================
+    X_train_full=pd.concat([X_train_trans,X_val_trans])
+    y_train_full=pd.concat([y_train,y_val])
     
+    X_train_full=pipeline.fit_transform(X_train_full)
+    
+    clf=xgboost.XGBClassifier(**params)
+    eval_set=[(X_train_full,y_train_full),(X_test_trans,y_test)]
+    eval_metric=['error','logloss']
+    clf.fit(X_train_full,y_train_full,eval_metric=eval_metric,eval_set=eval_set,verbose=5,early_stopping_rounds=5)
+    
+    evals_result=clf.evals_result()
+    
+    y_preds=clf.predict(X_test)
+    
+    F_CV=grid_search.best_score_    
+    P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
+    
+    print(P,R,F,F_CV,params)
+    
+    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBRFC_img_classifier.pkl")
+
+export_full_transformed_dataset=False
+if export_full_transformed_dataset:
+    processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
+    
+    #Training Data Set
+    training_full=np.c_[X_train_full,np.array(y_train_full)]
+    joblib.dump(training_full,processed_data_dir+'\\XGB-RFC_img_train.pkl')
+    
+    #Testing Data Set
+    testing_full=test
+    joblib.dump(testing_full,processed_data_dir+'\\XGB-RFC_img_test.pkl')

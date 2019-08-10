@@ -202,11 +202,12 @@ if final_params_selected:
     #  Combine training and validation sets to increase training data
     # =============================================================================
     X_train_full=pd.concat([X_train_trans,X_val_trans])
+    y_train_full=pd.concat([y_train,y_val])
     
     clf=xgboost.XGBClassifier(**params)
     eval_set=[(X_train_trans,y_train),(X_test_trans,y_test)]
     eval_metric=['error','logloss']
-    clf.fit(X_train_trans,y_train,eval_metric=eval_metric,eval_set=eval_set,verbose=5,early_stopping_rounds=5)
+    clf.fit(X_train_full,y_train_full,eval_metric=eval_metric,eval_set=eval_set,verbose=5,early_stopping_rounds=5)
     
     evals_result=clf.evals_result()
     
@@ -232,5 +233,19 @@ if final_params_selected:
     
     
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBC_img_classifier.pkl")
+
+
+export_full_transformed_dataset=True
+if export_full_transformed_dataset:
+    processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
+    
+    #Training Data Set
+    training_full=X_train_full
+    training_full['bowties']=y_train_full
+    joblib.dump(training_full,processed_data_dir+'\\XGBC_img_train.pkl')
+    
+    #Testing Data Set
+    testing_full=test
+    joblib.dump(testing_full,processed_data_dir+'\\XGBC_img_test.pkl')
 
     
