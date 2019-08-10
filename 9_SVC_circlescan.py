@@ -193,6 +193,9 @@ if final_params_selected:
     y_train=train['bowties']  
     X_train=train.drop(columns='bowties')
     
+    y_test=test['bowties']
+    X_test=test.drop(columns='bowties')
+    
     pipeline=Pipeline([('Reducer',dp.reduce_features_in_sweep(first_index_of_sweep_in_X=list(X.columns).index('sh0_0'),
                                   reduced_circle_sweep_res=res)),
                        ('ThetaDiff',dp.combine_theta_peaks(combine_and_remove=False)),
@@ -204,14 +207,19 @@ if final_params_selected:
     X_train_trans=pipeline.fit_transform(X_train)
     X_test_trans=pipeline.fit_transform(X_test)
         
-    clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
+    clf=SVC(**params,probability=True)
     clf.fit(X_train_trans,y_train)
     
     y_preds=clf.predict(X_test_trans)
-        
-    F_CV=rand_search.best_score_    
+    
+    if seeking:    
+        F_CV=rand_search.best_score_    
     P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
-    print(P,R,F,F_CV,params)
+    
+    if seeking:
+        print(P,R,F,F_CV,params)    
+    else:
+        print(P,R,F,params)
 
     
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_circlesweep_res-"+str(res)+"_classifier.pkl")

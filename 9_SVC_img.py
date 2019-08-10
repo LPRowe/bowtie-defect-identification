@@ -50,7 +50,7 @@ column_names=c1+c2+c3+c4
 
 #If seeking==True optimal parameters still need to be determined
 #If seeking==False optimal parameters have been determined and can be loaded
-seeking=True
+seeking=False
 
 if seeking:
     max_pool_performance=dict()
@@ -115,7 +115,7 @@ if seeking:
 
 
 if seeking==False:
-    max_pool_performance=joblib.load(max_pool_performance,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_img_max-pool_dict.pkl")
+    max_pool_performance=joblib.load("C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_img_max-pool_dict.pkl")
 
 
 ################################################
@@ -183,23 +183,26 @@ if final_params_selected:
     X_train_trans=pipeline.fit_transform(X_train)
     X_test_trans=pipeline.fit_transform(test.drop(columns='bowties'))
         
-    clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
+    clf=SVC(**params,probability=True)
     clf.fit(X_train_trans,y_train)
     
     y_preds=clf.predict(X_test_trans)
-    
-    F_CV=rand_search.best_score_    
+            
     P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
     
-    max_pool_performance[int(pool_side_length**2)]=(P,R,F,F_CV,params) #Precision, Recall, F1 (when applied to test set), F1_CV (measured during cross validation training across 150 trials, parameters used for both)
+    if seeking:
+        F_CV=rand_search.best_score_    
+        max_pool_performance[int(pool_side_length**2)]=(P,R,F,F_CV,params) #Precision, Recall, F1 (when applied to test set), F1_CV (measured during cross validation training across 150 trials, parameters used for both)
+        print(str(pool_side_length),'| P:',str(round(P,2)),'R:',str(round(R,2)),'F:',str(round(F,2)),'F_CV:',str(round(F_CV,2)))
+    else:
+        max_pool_performance[int(pool_side_length**2)]=(P,R,F,params) #Precision, Recall, F1 (when applied to test set), F1_CV (measured during cross validation training across 150 trials, parameters used for both)
+        print(str(pool_side_length),'| P:',str(round(P,2)),'R:',str(round(R,2)),'F:',str(round(F,2)))
 
-    print(str(pool_side_length),'| P:',str(round(P,2)),'R:',str(round(R,2)),'F:',str(round(F,2)),'F_CV:',str(round(F_CV,2)))
-    
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_img_max-pool-"+str(int(pool_side_length**2))+"_classifier.pkl")
 
     
 
-export_full_transformed_dataset=True
+export_full_transformed_dataset=False
 if export_full_transformed_dataset:
     processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
     
