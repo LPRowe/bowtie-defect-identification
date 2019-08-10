@@ -28,3 +28,5 @@
 
 * [ ]  Gaussian low pass filter and subtract from image (equivalent high pass filter)
 * [ ]  Standard deviation as feature for bowtie training set
+
+* [ ]  Blender Probabilities: https://stats.stackexchange.com/questions/155817/combining-probabilities-information-from-different-sources
