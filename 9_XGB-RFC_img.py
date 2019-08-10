@@ -201,8 +201,8 @@ if export_full_transformed_dataset:
     
     #Training Data Set
     training_full=np.c_[X_train_full,np.array(y_train_full)]
-    joblib.dump(training_full,processed_data_dir+'\\XGB-RFC_img_train.pkl')
+    joblib.dump(training_full,processed_data_dir+'\\XGBRFC_img_train.pkl')
     
     #Testing Data Set
     testing_full=test
-    joblib.dump(testing_full,processed_data_dir+'\\XGB-RFC_img_test.pkl')
+    joblib.dump(testing_full,processed_data_dir+'\\XGBRFC_img_test.pkl')

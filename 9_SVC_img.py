@@ -205,8 +205,8 @@ if export_full_transformed_dataset:
     
     #Training Data Set
     training_full=np.c_[X_train_trans,np.array(y_train)]
-    joblib.dump(training_full,processed_data_dir+'\\SVC_mp-img_train.pkl')
+    joblib.dump(training_full,processed_data_dir+'\\SVC_mpimg_train.pkl')
     
     #Testing Data Set
     testing_full=np.c_[X_test_trans,np.array(y_test)]
-    joblib.dump(testing_full,processed_data_dir+'\\SVC_mp-img_test.pkl')
+    joblib.dump(testing_full,processed_data_dir+'\\SVC_mpimg_test.pkl')

@@ -36,11 +36,10 @@ for file in glob.glob('*classifier.pkl'):
 # =============================================================================
 clf_data={ET_img:ETC_img_test,
           ETC_circlesweep:ETC_circle_test,
-          RF_circle:,
-          RF_img:,
-          SVM_circlesweep:,
-          SVM_img:,
-          XGBC_img:,
-          XGBRFC_img:,
-          
+          RF_circle:RFC_circle_test,
+          RF_img:RFC_img_test,
+          SVM_circlesweep:SVC_circle_test,
+          SVM_img:SVC_mp-img_test,
+          XGBC_img:XGBC_img_test,
+          XGBRFC_img:XGB-RFC_img_test,
         }
