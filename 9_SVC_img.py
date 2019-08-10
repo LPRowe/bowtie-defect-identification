@@ -42,41 +42,22 @@ data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\Wafer_Im
 X_raw=np.load(data_dir+'\\std0_std45_sh0-arr_sh45-arr_bow-bool_train.npy')
 
 
-################################################
-# ADD COLUMN NAMES AND CONVERT TO PANDAS DF
-################################################
-def numpy_to_pd(array,column_names):
-    '''
-    array: numpy array
-    column_names: list of strings where each item is a column name
-    
-    Example:
-        array=np.array([[1,2],[3,4]])
-        column_names=['c_1','c_2']
-        X=numpy_to_pd(array,column_names)
-        print(X)
-        >>>pandas.DataFrame(dict({'c_1':[1,3],'c_2':[2,4]}))
-    '''
-    pd_dict=dict()
-    for (name,index) in zip(column_names,range(len(column_names))):
-        pd_dict[name]=array[:,index]
-    return pd.DataFrame(pd_dict)
-
-
 c1=['std0','std45']
 c2=['sh0_{0}'.format(str(i)) for i in range(64)]
 c3=['sh45_{0}'.format(str(i)) for i in range(64)]
 c4=['bowties']
 column_names=c1+c2+c3+c4
 
+#If seeking==True optimal parameters still need to be determined
+#If seeking==False optimal parameters have been determined and can be loaded
 seeking=True
 
 if seeking:
     max_pool_performance=dict()
-    for pool_side_length in [1,2,4,8]:
+    for pool_side_length in [2,4]:
         print('Starting pool_side_length='+str(pool_side_length))
         
-        X=numpy_to_pd(X_raw,column_names)
+        X=dp.numpy_to_pd(X_raw,column_names)
         
         ################################################
         # SPLIT DATA INTO TEST AND TRAIN BOTH BALANCED
@@ -108,7 +89,7 @@ if seeking:
         
         
         svm_classifier=SVC()
-        rand_search=RandomizedSearchCV(svm_classifier,param_distributions=param_distribs,n_iter=30,cv=5,scoring='f1',verbose=2,n_jobs=2,random_state=42,iid=True)
+        rand_search=RandomizedSearchCV(svm_classifier,param_distributions=param_distribs,n_iter=30,cv=5,scoring='f1',verbose=2,n_jobs=-1,random_state=42,iid=True)
         rand_search.fit(X_train_trans,y_train)
         
         params=rand_search.best_params_
@@ -141,6 +122,7 @@ if seeking==False:
 # PLOT PERFORMANCE SCORE (F1) OF EACH SVC
 # VERSUS THE RESOLUTION REDUCTION VALUE
 ################################################
+    
 #Using res_reduct_preformance dictionary calculated above
 pool_size=[pool_size for pool_size in max_pool_performance]
 
@@ -173,11 +155,11 @@ plt.legend(['F1_test','F1_CV'])
 
 
 final_params_selected=True
-pool_side_length=2 #corresponds to 18 features in each circle sweep
+pool_side_length=2 #corresponds to 
 params=max_pool_performance[int(pool_side_length**2)][4] #{'C': 16.22388397086384, 'gamma': 0.20261142283225705, 'kernel': 'rbf'}
 
 if final_params_selected:
-    X=numpy_to_pd(X_raw,column_names)
+    X=dp.numpy_to_pd(X_raw,column_names)
     
     ################################################
     # SPLIT DATA INTO TEST AND TRAIN BOTH BALANCED
@@ -199,11 +181,32 @@ if final_params_selected:
     
     
     X_train_trans=pipeline.fit_transform(X_train)
+    X_test_trans=pipeline.fit_transform(test.drop(columns='bowties'))
         
     clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
     clf.fit(X_train_trans,y_train)
+    
+    y_preds=clf.predict(X_test_trans)
+    
+    F_CV=rand_search.best_score_    
+    P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
+    
+    max_pool_performance[int(pool_side_length**2)]=(P,R,F,F_CV,params) #Precision, Recall, F1 (when applied to test set), F1_CV (measured during cross validation training across 150 trials, parameters used for both)
+
+    print(str(pool_side_length),'| P:',str(round(P,2)),'R:',str(round(R,2)),'F:',str(round(F,2)),'F_CV:',str(round(F_CV,2)))
     
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_img_max-pool-"+str(int(pool_side_length**2))+"_classifier.pkl")
 
     
 
+export_full_transformed_dataset=True
+if export_full_transformed_dataset:
+    processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
+    
+    #Training Data Set
+    training_full=np.c_[X_train_trans,np.array(y_train)]
+    joblib.dump(training_full,processed_data_dir+'\\SVC_mp-img_train.pkl')
+    
+    #Testing Data Set
+    testing_full=np.c_[X_test_trans,np.array(y_test)]
+    joblib.dump(testing_full,processed_data_dir+'\\SVC_mp-img_test.pkl')

@@ -108,7 +108,7 @@ if seeking:
         
         
         svm_classifier=SVC()
-        rand_search=RandomizedSearchCV(svm_classifier,param_distributions=param_distribs,n_iter=30,cv=5,scoring='f1',verbose=2,n_jobs=2,random_state=42,iid=True)
+        rand_search=RandomizedSearchCV(svm_classifier,param_distributions=param_distribs,n_iter=30,cv=5,scoring='f1',verbose=2,n_jobs=-1,random_state=42,iid=True)
         rand_search.fit(X_train_trans,y_train)
         
         params=rand_search.best_params_
@@ -118,9 +118,9 @@ if seeking:
         
         y_test=test['bowties']
         X_test=test.drop(columns='bowties')
-        X_test=pipeline.fit_transform(X_test)
+        X_test_trans=pipeline.fit_transform(X_test)
         
-        y_preds=clf.predict(X_test)
+        y_preds=clf.predict(X_test_trans)
         
         F_CV=rand_search.best_score_    
         P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
@@ -202,10 +202,29 @@ if final_params_selected:
     
     
     X_train_trans=pipeline.fit_transform(X_train)
+    X_test_trans=pipeline.fit_transform(X_test)
         
     clf=SVC(C=params['C'],gamma=params['gamma'],kernel='rbf')
     clf.fit(X_train_trans,y_train)
     
-    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_circlesweep_res-"+str(res)+"_classifier.pkl")
+    y_preds=clf.predict(X_test_trans)
+        
+    F_CV=rand_search.best_score_    
+    P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
+    print(P,R,F,F_CV,params)
 
     
+    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\SVM_circlesweep_res-"+str(res)+"_classifier.pkl")
+
+
+export_full_transformed_dataset=False
+if export_full_transformed_dataset:
+    processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
+    
+    #Training Data Set
+    training_full=np.c_[X_train_trans,np.array(y_train)]
+    joblib.dump(training_full,processed_data_dir+'\\SVC_circle_train.pkl')
+    
+    #Testing Data Set
+    testing_full=np.c_[X_test_trans,np.array(y_test)]
+    joblib.dump(testing_full,processed_data_dir+'\\SVC_circle_test.pkl')     

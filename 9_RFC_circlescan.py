@@ -97,9 +97,9 @@ if seeking:
     
     y_test=test['bowties']
     X_test=test.drop(columns='bowties')
-    X_test=pipeline.fit_transform(X_test)
+    X_test_trans=pipeline.fit_transform(X_test)
     
-    y_preds=clf.predict(X_test)
+    y_preds=clf.predict(X_test_trans)
     
     F_CV=grid_search.best_score_    
     P,R,F=precision_score(y_test,y_preds),recall_score(y_test,y_preds),f1_score(y_test,y_preds)
@@ -112,4 +112,14 @@ final_params_selected=True
 if final_params_selected:
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\RF_circle_sweep_classifier.pkl")
 
+export_full_transformed_dataset=True
+if export_full_transformed_dataset:
+    processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
     
+    #Training Data Set
+    training_full=np.c_[X_train_trans,np.array(y_train)]
+    joblib.dump(training_full,processed_data_dir+'\\RFC_circle_train.pkl')
+    
+    #Testing Data Set
+    testing_full=np.c_[X_test_trans,np.array(y_test)]
+    joblib.dump(testing_full,processed_data_dir+'\\RFC_circle_test.pkl')    

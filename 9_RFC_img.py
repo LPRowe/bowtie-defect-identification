@@ -106,4 +106,14 @@ final_params_selected=True
 if final_params_selected:
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\RF_img_classifier.pkl")
 
+export_full_transformed_dataset=True
+if export_full_transformed_dataset:
+    processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
     
+    #Training Data Set
+    training_full=np.c_[X_train_trans,np.array(y_train)]
+    joblib.dump(training_full,processed_data_dir+'\\RFC_img_train.pkl')
+    
+    #Testing Data Set
+    testing_full=test
+    joblib.dump(testing_full,processed_data_dir+'\\RFC_img_test.pkl')   
