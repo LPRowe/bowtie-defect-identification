@@ -101,12 +101,11 @@ for clf_ in clf_test_data:
     F1=f1_score(p_hard,y)
           
     clf_test_data[clf_]=[clf,data,p_soft,p_hard,y,F1]
-
-
+    
 # =============================================================================
 # Create our blender with predictions weighted by F1 score
 # =============================================================================
-def blend(ctd=clf_test_data,weight='f1'):
+def blend(ctd=clf_test_data,weight='f1pow',power=2):
     #[0  ,1   ,2     ,3     ,4,5 ]
     #[clf,data,p_soft,p_hard,y,F1]
     
@@ -117,6 +116,8 @@ def blend(ctd=clf_test_data,weight='f1'):
             sum_weight+=ctd[clf][5]
         elif weight=='uniform':
             sum_weight+=1
+        elif weight=='f1pow':
+            sum_weight+=ctd[clf][5]**power
         
     #For instance 1 p_pos[0]=[f1*p1[0]+f2*p2[0]+...fn*pn[0]] for each of the classifiers
     #For instance 2 p_pos[1]=[f1*p1[1]+f2*p2[1]...fn*pn[1]] for each of the classifiers
@@ -131,6 +132,8 @@ def blend(ctd=clf_test_data,weight='f1'):
                 w=np.array(ctd[clf][5])
             elif weight=='uniform':
                 w=1
+            elif weight=='f1pow':
+                w=ctd[clf][5]**power
             p_pos[count]+=p[1]*w
             p_neg[count]+=p[0]*w
             count+=1
@@ -140,7 +143,8 @@ def blend(ctd=clf_test_data,weight='f1'):
     
     return(p_neg,p_pos)
 
-p_neg,p_pos=blend(clf_test_data,weight='f1')
+p_neg,p_pos=blend(clf_test_data,weight='f1pow')
+
 
 # =============================================================================
 # Predict bowtie or non-bowtie based on p_pos
@@ -152,27 +156,92 @@ def predict_y(p_pos,p_crit):
     return y_pred.tolist()
 
 y_true=[int(i) for i in clf_test_data['ET_img'][4].tolist()]
+p_crit_vals=np.linspace(0.01,0.99,500)
 
-precision=[]
-recall=[]
-f1=[]
-p_crit_vals=np.linspace(0.01,0.85,400)
+
+p_blend=[]
+r_blend=[]
+f_blend=[]
 for p_crit in p_crit_vals:
-    precision.append(precision_score(predict_y(p_pos,p_crit),y_true))
-    recall.append(recall_score(predict_y(p_pos,p_crit),y_true))
-    f1.append(f1_score(predict_y(p_pos,p_crit),y_true))
+    p_blend.append(precision_score(predict_y(p_pos,p_crit),y_true))
+    r_blend.append(recall_score(predict_y(p_pos,p_crit),y_true))
+    f_blend.append(f1_score(predict_y(p_pos,p_crit),y_true))
+
+save_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\side-scripts\\pr-curves'  
+os.chdir(save_dir)
+for clf_name in clf_test_data:
+    print(clf_name)
+    #[0  ,1   ,2     ,3     ,4,5 ]
+    #[clf,data,p_soft,p_hard,y,F1]
+    
+    p_soft=clf_test_data[clf_name][2]
+    p_pos=[i[1] for i in p_soft]
+    
+    precision=[]
+    recall=[]
+    f1=[]
+    for p_crit in p_crit_vals:
+        precision.append(precision_score(predict_y(p_pos,p_crit),y_true))
+        recall.append(recall_score(predict_y(p_pos,p_crit),y_true))
+        f1.append(f1_score(predict_y(p_pos,p_crit),y_true))
+    
+    plt.close('all')
+    plt.figure(1)
+    plt.plot(p_crit_vals,precision,'r-',lw=2)
+    plt.plot(p_crit_vals,recall,'g-',lw=2)
+    plt.plot(p_crit_vals,f1,'b-',lw=2)
+    plt.xlabel('Bowtie Probability Cutoff')
+    plt.legend(['Precision','Recall','F1 Score'])
+    plt.title('P-R Scores for '+str(clf_name))
+    plt.savefig(str(clf_name)+'_PR_scores.png')
+    
+    
+    plt.figure(2)
+    plt.plot(recall,precision,'b-',lw=2)
+    plt.xlabel('Recall (False Positive Rate)')
+    plt.ylabel('Precision (True Positive Rate)')
+    plt.title('Precision-Recall for '+str(clf_name))
+    plt.savefig(str(clf_name)+'_PR_curve.png')
+    
+    
+    globals()['p_%s'%clf_name]=precision
+    globals()['r_%s'%clf_name]=recall
+    globals()['f_%s'%clf_name]=f1
 
 plt.close('all')
 plt.figure(1)
-plt.plot(p_crit_vals,precision,'r-',lw=2)
-plt.plot(p_crit_vals,recall,'g-',lw=2)
-plt.plot(p_crit_vals,f1,'b-',lw=2)
+lw=2
+plt.plot(p_crit_vals,r_XGBC_img,'b-',lw=lw)
+plt.plot(p_crit_vals,r_XGBRFC_img,'g--',lw=lw)
+plt.plot(p_crit_vals,p_XGBC_img,'c-',lw=lw)
+plt.plot(p_crit_vals,p_XGBRFC_img,'r--',lw=lw)
+plt.legend(['XGBC Recall','XGBRFC Recall','XGBC Precision','XGB-RFC Precision'])
 plt.xlabel('Bowtie Probability Cutoff')
-plt.legend(['Precision','Recall','F1 Score'])
-plt.title('P-R Scores for F1 Weighted Blender')
+plt.savefig('XGBC-XGBRFC_precision_recall.png')
 
+'''
 plt.figure(2)
-plt.plot(recall,precision,'b-',lw=2)
-plt.xlabel('Recall (False Positive Rate)')
-plt.ylabel('Precision (True Positive Rate)')
-plt.title('Precision-Recall for F1 Weighted Blender')
+plt.plot(p_crit_vals,p_XGBC_img,'b-')
+plt.plot(p_crit_vals,p_XGBRFC_img,'g--')
+plt.legend(['XGBC Precision','XGB-RFC Precision'])
+plt.xlabel('Bowtie Probability Cutoff')
+plt.savefig('XGBC-XGBRFC_Precision.png')
+'''
+
+plt.figure(3)
+plt.plot(p_crit_vals,f_XGBC_img,'b-')
+plt.plot(p_crit_vals,f_XGBRFC_img,'g--')
+plt.legend(['XGBC F1','XGB-RFC F1'])
+plt.xlabel('Bowtie Probability Cutoff')
+plt.savefig('XGBC-XGBRFC_F1.png')
+
+plt.figure(4)
+for clf_name in clf_test_data:
+    plt.plot(p_crit_vals,globals()['f_%s'%clf_name])
+plt.plot(p_crit_vals,f_blend)
+legend=[clf_name for clf_name in clf_test_data]
+legend.append('Blender')
+plt.legend(legend)
+plt.xlabel('Bowtie Probability Cutoff')
+plt.ylabel('F1 Score')
+plt.savefig('F1_score_all_classifiers.png')
