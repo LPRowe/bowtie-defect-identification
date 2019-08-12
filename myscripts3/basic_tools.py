@@ -217,10 +217,11 @@ def LocalToGlobalIdx(LocalIndex,SubSubImgIndex,Xpixelspersubsub,Ypixelspersubsub
     '''
     globalidx_=(SubSubImgIndex//Xsubsubimagesacross)*Xpixelspersubsub*Ypixelspersubsub*Xsubsubimagesacross+(LocalIndex//Xpixelspersubsub)*(Xsubsubimagesacross*Xpixelspersubsub)+(SubSubImgIndex%Xsubsubimagesacross)*Xpixelspersubsub+LocalIndex%Xpixelspersubsub
     return globalidx_
-    
+
+"""   
 def boxpoint(img,G,value,xdim=640,ydim=480,boxsize=20):
     '''
-    This draws a box of 20 pixels lenght around pixel G
+    This draws a box of 20 pixels lenght around pixel index G
     
     value should be set to np.max(img) or np.min(img) such that the box is white or black
     '''
@@ -235,6 +236,40 @@ def boxpoint(img,G,value,xdim=640,ydim=480,boxsize=20):
             img[Y+i][X+int(boxsize/2)]=value
         if 0<Y+i and Y+i<ydim and X-int(boxsize/2)>0:
             img[Y+i][X-int(boxsize/2)]=value
+    return img
+"""
+
+def boxpoint(img,G,value,xdim=640,ydim=480,boxsize=20):
+    '''
+    This draws a box of 20 pixels lenght around pixel index G
+    
+    value should be set to np.max(img) or np.min(img) such that the box is white or black
+    '''
+    X,Y=G%xdim,G//xdim
+    
+    #X=635
+    #Y=200
+    box_pixels=[]
+    box_pixels.extend([(int(X-0.5*boxsize),int(j)) for j in range(int(Y-0.5*boxsize),int(Y+0.5*boxsize))])
+    box_pixels.extend([(int(X+0.5*boxsize),int(j)) for j in range(int(Y-0.5*boxsize),int(Y+0.5*boxsize))])
+    box_pixels.extend([(int(i),int(Y-0.5*boxsize)) for i in range(int(X-0.5*boxsize),int(X+0.5*boxsize))])
+    box_pixels.extend([(int(i),int(Y+0.5*boxsize)) for i in range(int(X-0.5*boxsize),int(X+0.5*boxsize))])
+    
+    #Remove any off-image coordinates
+    bpx=np.array([coord[0] for coord in box_pixels])
+    bpy=np.array([coord[1] for coord in box_pixels])
+    
+    #mask true only for valid pixels
+    mask=(bpx<=xdim-1)*(bpx>=0)*(bpy<=ydim-1)*(bpy>=0)
+    
+    masked_pixels=[]
+    for (i,j) in zip(mask,box_pixels):
+        if i:
+            masked_pixels.append(j)
+    
+    for coord in masked_pixels:
+        img[coord[1]][coord[0]]=value
+
     return img
 
 def resetpixels(img,badpix,value,xdim=640):

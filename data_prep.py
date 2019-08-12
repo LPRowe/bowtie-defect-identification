@@ -192,8 +192,8 @@ def extract_features_XGBC(sh0_arr,sh45_arr,pixel):
     # =============================================================================
     # Crop array around bowtie
     # =============================================================================
-    xdim,ydim=sh0.shape
-    x_loc,y_loc=pixel%xdim,pixel//ydim
+    ydim,xdim=sh0_arr.shape
+    x_loc,y_loc=pixel%xdim,pixel//xdim
     sh0=sh0_arr[int(y_loc-0.5*bs):int(y_loc+0.5*bs),int(x_loc-0.5*bs):int(x_loc+0.5*bs)]
     sh45=sh45_arr[int(y_loc-0.5*bs):int(y_loc+0.5*bs),int(x_loc-0.5*bs):int(x_loc+0.5*bs)]
     
@@ -202,12 +202,14 @@ def extract_features_XGBC(sh0_arr,sh45_arr,pixel):
     # =============================================================================
     std0=np.std(sh0)
     std45=np.std(sh45)
-    sh0=np.reshape(sh0,(1,-1))
-    sh45=np.reshape(sh45,(1,-1))
+    sh0=np.reshape(sh0,(1,-1)).tolist()[0]
+    sh45=np.reshape(sh45,(1,-1)).tolist()[0]
 
     features=[std0,std45]
-    features.extend(sh0)
-    features.extend(sh45)
+    for i in sh0:
+        features.append(i)
+    for i in sh45:
+        features.append(i)
     
     return features
         
