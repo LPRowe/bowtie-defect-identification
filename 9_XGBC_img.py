@@ -79,6 +79,9 @@ if seeking:
     y_train=train['bowties']  
     X_train=train.drop(columns='bowties')
     
+    y_test=test['bowties']
+    X_test=test.drop(columns='bowties')
+    
     y_val=train_val['bowties']
     X_val=train_val.drop(columns='bowties')
     
@@ -196,7 +199,7 @@ print(P,R,F,F_CV,params)
 #  between 46 and 58 so we will run it for 70 and use early stopping
 # =============================================================================
 params['n_estimators']=70
-final_params_selected=True
+final_params_selected=False
 if final_params_selected:
     # =============================================================================
     #  Combine training and validation sets to increase training data
@@ -235,7 +238,7 @@ if final_params_selected:
     joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBC_img_classifier.pkl")
 
 
-export_full_transformed_dataset=True
+export_full_transformed_dataset=False
 if export_full_transformed_dataset:
     processed_data_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\preprocessed_datasets'
     
