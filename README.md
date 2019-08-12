@@ -13,11 +13,31 @@ They are the result of residual stress acting on microcracks.
 <p align='center'><img src='images/0009raw_1188.png' width='600'></p>
 
 This repository will address:
-1. Converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
-1. Creating/applying subtraction images
-1. Detecting (and removing) hypersensitive pixels and unnecessary images
-1. Cleaning manually identified bowties and non-bowties
-1. Building a machine learning classifier using SVM and feature engineering
+* Post processing raw IR-GFP image data [1-4]
+    * converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
+	* creating/applying subtraction images
+	* detecting (and removing) hypersensitive pixels and unnecessary images
+	* identifying (and ignoring) low quality images
+* Creating two machine learning (ML) training sets for identifying bowties [5-8]
+    * img: standard deviation and numpy arrays of shear 0 and shear 45 images
+    * circlescan: standard deviation and circle sweep of shear 0 and shear 45 images
+	    * circle sweep: (a.k.a. circle scan) a list of points where each point is the average value of a 20 micron radial line scan from the center of a bowtie, where the line scan is swept tangentially about the center of the bowtie
+* Optimizing 8 ML classifiers [9]
+    * Extra Trees Classifier (using img and circlescan training sets)
+	* Random Forest Classifier (using img and circlescan training sets)
+	* Support Vector Classifier (using img and circle scan training sets)
+	* Extreme Gradient Boosted Classifier (using img training set)
+	* Extreme Gradient Boosted Random Forest Classifier (using img training set)
+* Combining classifier output though weighted soft voting [10]
+    * Uniformly weighted and weighted according to each classifiers peak F1 score
+* Demonstrating the best model's ability to classify bowties [11]
+    * XGB Classifier outperformed 
+
+* Converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
+* Creating/applying subtraction images
+* Detecting (and removing) hypersensitive pixels and unnecessary images
+* Creating a manually identified bowties and non-bowties
+* Building a machine learning classifier using SVM and feature engineering
 
 For information:
 * regarding the use of bowtie defects to characterize monocrystalline silicon wafers according to strength see [here](/documents/NDPE%20CHAR%20OF%20cSi%20PV%20WAFERS.pdf).
