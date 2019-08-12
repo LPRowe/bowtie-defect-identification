@@ -199,7 +199,7 @@ print(P,R,F,F_CV,params)
 #  between 46 and 58 so we will run it for 70 and use early stopping
 # =============================================================================
 params['n_estimators']=70
-final_params_selected=False
+final_params_selected=True
 if final_params_selected:
     # =============================================================================
     #  Combine training and validation sets to increase training data
@@ -235,7 +235,12 @@ if final_params_selected:
     print(P,R,F,F_CV,params)
     
     
-    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBC_img_classifier.pkl")
+    joblib.dump(clf,"C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\classifiers\\XGBC_img_classifier_.pkl")
+
+final_test_results=True
+if final_test_results:
+    y_pred_proba=clf.predict_proba(X_test)
+    
 
 
 export_full_transformed_dataset=False
