@@ -1,6 +1,6 @@
 # tl;dr
 
-Silicon photovoltaic wafers are cut from silicon inguts using a wire saw.  The wire sawing process introduces saw damage in the form of residual stress and microcracks near the wafer surfaces.  Imaging a wafer using an infrared grey-field polariscope (IR-GFP) reveals the location of microcracks since the profile of each microcracks locally elevated shear stress field looks like a bowtie.  
+Silicon photovoltaic wafers are cut from silicon inguts using a wire saw.  The wire sawing process introduces saw damage in the form of residual stress and microcracks near the wafer surfaces.  Imaging a wafer using an infrared grey-field polariscope (IR-GFP) reveals the location of microcracks since the profile of a microcrack's locally elevated shear stress field looks like a bowtie.  
 
 This repository post processes raw IR-GFP image data [1-4], helps create two machine learning (ML) training sets for identifying bowties [5-8], optimizes 8 ML classifiers [9], combines classifier output though weighted soft voting [10], and demonstrates the best model's ability to classify bowties [11].  
 
