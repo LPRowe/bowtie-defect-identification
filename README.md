@@ -71,13 +71,13 @@ The .py files provided in this repository are intended to be run sequentially ac
     <p align='center'><img src='images/shear_0_45_subtraction_image.png' width='600'></p>
     <p align='center'><b>Effect of Applying Subtraction Image</b></p>
     <p align='center'><img src='images/0009raw_93_SubExample.png' width='600'></p>
-1. Generates annotated images of 5x IR-GFP images to facilitate the process of manually identifying bowties to train the machine learning classifier.  The procedure of doing so is as follows:
+1. Generates annotated images of 5x IR-GFP images to facilitate the process of manually identifying bowties.  Manually identified bowties and nonbowties will be used to train the machine learning classifier.  The procedure of doing so is as follows:
     1. Each image is generated from a .dt1 file
     1. Low quality images (blurry or low light) are filtered out
     1. Images are post processed by applying a subtraction image and removing hypersensitive pixels
     1. Shear max images are sub-divided into 16 equally sized "sub-images"
     1. The most intense pixel in the shear max sub-image region is boxed and annotated by the sub-image index
-    1. Image is saved for manual bowtie identification
+    1. Image is saved for manual bowtie identification (images are saved in an external directory due to memory constraints)
     <p align='center'><b>Shear 0 Manual Bowtie Identification</b></p>
     <p align='center'><img src='images/285_0.png' width='600' title='Shear 0 Manual Bowtie Identification'></p>
     <p align='center'><b>Shear 45 Manual Bowtie Identification</b></p>
