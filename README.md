@@ -33,11 +33,6 @@ This repository will address:
 * Demonstrating the best model's ability to classify bowties [11]
     * XGB Classifier outperformed 
 
-* Converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
-* Creating/applying subtraction images
-* Detecting (and removing) hypersensitive pixels and unnecessary images
-* Creating a manually identified bowties and non-bowties
-* Building a machine learning classifier using SVM and feature engineering
 
 For information:
 * regarding the use of bowtie defects to characterize monocrystalline silicon wafers according to strength see [here](/documents/NDPE%20CHAR%20OF%20cSi%20PV%20WAFERS.pdf).
@@ -51,7 +46,7 @@ in microelectronic materials and devices" Review of Scientific Instruments 2005 
 Special thanks to Prof. Harley Johnson, Dr. Gavin Horn, Dr. Tung-wei Lin and Alex Kaczkowski whose guidance and advice have been deeply appreciated.  This study was supported by the National Science Foundation (NSF) under Grant No. CMMI13-00466.
 
 # Instructions
-The .py files provided in this repository are intended to be run sequentially according to the number in the file name; points 1 - 6 below correspond to .py files beginning with 1 - 6.  The .dt1 files containing 3,234-3,500 microscopic IR-GFP images for each wafer are not included in the repository.  You can access them through the lab external hard drive or copy them into the Wafer Data Files folder included in the repository.  If you choose to do the latter then update the variables datafile and dt1file in the code to reflect the new location of the .dt1 files.  
+The .py files provided in this repository are intended to be run sequentially according to the number in the file name; points 01 - 11 below correspond to .py files beginning with 01 - 11.  The .dt1 files containing 3,234-3,500 microscopic IR-GFP images for each wafer are not included in the repository.  You can access them through the lab external hard drive or copy them into the Wafer Data Files folder in this repository.  If you choose to do the latter then update the variables datafile and dt1file in the code to reflect the new location of the .dt1 files.  
 
 1. Collects light level information from each microscopic image and tracks which pixels have uncommonly high intensity.  This information is saved in the designated savefile and will be used to filter out low quality images and identify hypersensitive pixels.  
     1. Set post-saw-damage-removal boolean.
