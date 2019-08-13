@@ -4,7 +4,7 @@ Silicon photovoltaic wafers are cut from silicon inguts using a wire saw.  The w
 
 This repository post processes raw IR-GFP image data [1-4], assists in creating two machine learning (ML) training sets for identifying bowties [5-8], optimizes 8 ML classifiers [9], combines classifier output though weighted soft voting [10], and demonstrates the best model's ability to classify bowties [11].  
 
-Using xgboost.XGBClassifier() a **recall value of 96%** with a **precision of 87%** was achieved resulting in an F1 score of 0.913.  This performed better than the soft classifier when uniformly weighted and when weighted according to each classifiers peak F1 score.  Only by heavily weighting the soft voter were similar results to the XGB classifier produced.  
+**Spoiler:** Using xgboost.XGBClassifier() a **recall value of 96%** with a **precision of 87%** was achieved resulting in an F1 score of 0.913.  This performed better than the soft classifier when uniformly weighted and when weighted according to each classifiers peak F1 score.  Only by heavily weighting the soft voter were similar results to the XGB classifier produced.  
 
 # bowtie-defect-identification
 Bowtie defects (shown below) can be observed in microscopic shear stress images of silicon wafers.  
