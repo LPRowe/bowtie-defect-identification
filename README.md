@@ -93,7 +93,7 @@ The .py files provided in this repository are intended to be run sequentially ac
 1. This script will read the manually identified bowtie and non-bowtie location files that you created after running script 5.  It will then load the images containing bowties, post process the image with a subtraction image, and crop a 40 by 40 pixel region around each bowtie or non-bowtie.  The cropped (non)bowties are saved as .npy files for ease of access later without the need for post processing.  More information/directions regarding the scipt are included in the scripts header.  
 
 1. Loads the .npy files for each (non)bowtie and extracts the features of interest and class into a numpy array.  Initially the goal was to make several diverse classifiers that make different mistakes when classifying bowties and would thus benifit greatly through an ensemble method.  As such, two datasets were made using the same manually identified (non)bowties:
-	* **bowtie_data** shape(-1,154) focuses on features related to the profile of the bowtie as observed from the circle sweep such as:
+	* **bowtie_data** shape(-1, 154) focuses on features related to the profile of the bowtie as observed from the circle sweep such as:
 		* Non-features: Wafer, Image Location, Sublocation (on image), Pixel on Image
 		* <span>&theta;</span><sub>M</sub> angle (measured form x+ axis) of maximum intensity in the circle sweep for the shear max image
 		* <span>&theta;<sub>0</sub> and &theta;<sub>45</sub></span> similar for shear 0 and shear 45 images
@@ -101,7 +101,7 @@ The .py files provided in this repository are intended to be run sequentially ac
 		* 72 values from the circle sweep around the shear 0 bowtie
 		* 72 values from the circle sweep around the shear 45 bowtie
 		* Bowtie classification 1 for bowtie 0 for nonbowtie
-	* **image_data** shape(-1,135) focuses on the 8 by 8 pixel array surrounding the bowtie
+	* **image_data** shape(-1, 135) focuses on the 8 by 8 pixel array surrounding the bowtie
 		* Non-features: Wafer, Image Location, Sublocation (on image), Pixel on Image
 		* Standard deviation of pixel valus in shear 0 and shear 45 images
 		* 8x8 numpy array of pixel values centered on the bowtie in shear 0 image converted to 1D array 
@@ -114,4 +114,16 @@ The .py files provided in this repository are intended to be run sequentially ac
 
 1. 8 classifiers were individually optimized to classify whether or not a bowtie is present in an image.  I remained fairly consistent with how the code is structured for each classifier so I will speak about them generally.  
 
-    
+    *  bowtie_data or image_data is loaded and split into test and train data
+	    * random_state=42 was used across all classifiers for uniformity
+		* test data (20%) and training data (80%) are both balanced with respect to (non)bowties
+		* in the case of XGBC_img and XGB-RFC_img data was split into test data (20%), validation data (16%) and training data (64%) for optimizing parameters and used the 80:20 split for final training
+	* seeking code block is where parameters are optimized using either grid search or random search
+	    * optimal parameters are determined by evaluating the classifier via 5 fold cross validation or by an eval_set such as the validation sets used for the extreme gradient boosted classifiers
+		* the best performing parameters are used to train the classifer which is then tested on the test set, the precision, recall, and F1 score are printed
+		* once acceptable parameters were determined based on the CV scores the param grid was reduced to the best value for each parameter.  If you alter the input data I encourage you to only use these values as a starting point and reoptimize the classifiers
+	* final_params_selected code block is where the final version of the classifier is trained (still leaving the test set out for ensemble purposes) and exported as a .pkl file
+	* export_full_transformed_dataset codeblock exports the test data in its transformed state
+	    * this saves the hastle of fitting and transforming the test sets to fit each classifier's needs when testing the soft voting classifier
+		
+    Some classifiers have custom transformers, such as reduce_features_in_sweep, combine_theta_peaks, and max_pooling.  Some of these are written assuming the input file is a pandas dataframe.  As such, when possible, these transformers should be placed at the beginning of the transformation pipeline since other transformers (like imputers) will output numpy arrays.
