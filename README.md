@@ -124,6 +124,6 @@ The .py files provided in this repository are intended to be run sequentially ac
 		* once acceptable parameters were determined based on the CV scores the param grid was reduced to the best value for each parameter.  If you alter the input data I encourage you to only use these values as a starting point and reoptimize the classifiers
 	* final_params_selected code block is where the final version of the classifier is trained (still leaving the test set out for ensemble purposes) and exported as a .pkl file
 	* export_full_transformed_dataset codeblock exports the test data in its transformed state
-	    * this saves the hastle of fitting and transforming the test sets to fit each classifier's needs when testing the soft voting classifier
+	    * this saves the hastle of fitting and transforming the test sets to match each classifier's needs when testing the soft voting classifier
 		
-    Some classifiers have custom transformers, such as reduce_features_in_sweep, combine_theta_peaks, and max_pooling.  Some of these are written assuming the input file is a pandas dataframe.  As such, when possible, these transformers should be placed at the beginning of the transformation pipeline since other transformers (like imputers) will output numpy arrays.
+    A few classifiers have custom transformers, such as reduce_features_in_sweep, combine_theta_peaks, and max_pooling.  The latter two assume the input file is a pandas dataframe.  As such, these transformers should be placed at the beginning of the transformation pipeline since other transformers (like imputers) output numpy arrays.
