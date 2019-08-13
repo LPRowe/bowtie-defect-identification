@@ -61,9 +61,9 @@ The .py files provided in this repository are intended to be run sequentially ac
     1. Update waferlist to reflect which wafer(s) you want to check for hot pixels
     
 	We define a hypersensitive pixel as one that occurs as the most intense pixel (in a shear max image) 4 or more times out of the 3,234 shear max images that make up a wafer.  Each image contains 640 * 480 pixels, as such the probability of a single pixel that has already occured as the most intense pixel in one image reoccuring as the most intense pixel in 0 to 4 other images is given by the following graph. 
-    '''
+
     <p align='center'><img src='images/hypersensitive-pixel-probability.JPG' width='400'></p>
-    '''
+
 1. Generates a shear 0 and shear 45 subtraction image for each wafer.  A subtraction image is the average of 108 images and will be used to remove the effects of consistent optical aberrations caused by reflections, imperfections in the optic train, and a polychromatic light source.  Low quality images (images of the wafer mask or blurry images) are filtered out prior to selecting the 108 images that will be used to make the subtraction image.  Of the remaining images, the 108 images with the lowest average shear max retardation are selected to make the subtraction image.  A brief explanation for why this is done is included in the script.   
 
     In the figure below notice the removal of the large faint bowtie pattern in the background while smaller bowties - caused by locally elevated shear stress near cracks - remain unaffected by the subtraction image.  The horizontal and vertical lines are caused by detector imperfections while the large faint bowtie pattern is caused by optical aberrations and a slightly elliptic (almost circularly polarized) polarized light source.  
@@ -113,3 +113,5 @@ The .py files provided in this repository are intended to be run sequentially ac
 1. Strips away features like wafer, image location, sub-image location and pixel location that will not assist in classifying each (non)bowtie.  Then balances the training sets so that there are an equal number of bowties and nonbowties.  More details are included in the script header.  
 
 1. 8 classifiers were individually optimized to classify whether or not a bowtie is present in an image.  I remained fairly consistent with how the code is structured for each classifier so I will speak about them generally.  
+
+    
