@@ -13,24 +13,24 @@ They are the result of residual stress acting on microcracks.
 <p align='center'><img src='images/0009raw_1188.png' width='600'></p>
 
 This repository will address:
-* Post processing raw IR-GFP image data [1-4]
+* **[1-4]** Post processing raw IR-GFP image data
     * converting .dt1 (Delta Vision) files into Shear 0, Shear 45, and Shear Max images
 	* creating/applying subtraction images
 	* detecting (and removing) hypersensitive pixels and unnecessary images
 	* identifying (and ignoring) low quality images
-* Creating two machine learning (ML) training sets for identifying bowties [5-8]
+* **[5-8]** Creating two machine learning (ML) training sets for identifying bowties
     * img: standard deviation and numpy arrays of shear 0 and shear 45 images
     * circlescan: standard deviation and circle sweep of shear 0 and shear 45 images
 	    * circle sweep: (a.k.a. circle scan) a list of points where each point is the average value of a 20 micron radial line scan from the center of a bowtie, where the line scan is swept tangentially about the center of the bowtie
-* Optimizing 8 ML classifiers [9]
+* **[9]** Optimizing 8 ML classifiers
     * Extra Trees Classifier (using img and circlescan training sets)
 	* Random Forest Classifier (using img and circlescan training sets)
 	* Support Vector Classifier (using img and circle scan training sets)
 	* Extreme Gradient Boosted Classifier (using img training set)
 	* Extreme Gradient Boosted Random Forest Classifier (using img training set)
-* Combining classifier output though weighted soft voting [10]
+* **[10]** Combining classifier output though weighted soft voting
     * Uniformly weighted and weighted according to each classifiers peak F1 score
-* Demonstrating the best model's ability to classify bowties [11]
+* **[11]** Demonstrating the best model's ability to classify bowties
     * XGB Classifier outperformed 
 
 
