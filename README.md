@@ -93,6 +93,23 @@ The .py files provided in this repository are intended to be run sequentially ac
 1. This script will read the manually identified bowtie and non-bowtie location files that you created after running script 5.  It will then load the images containing bowties, post process the image with a subtraction image, and crop a 40 by 40 pixel region around each bowtie or non-bowtie.  The cropped (non)bowties are saved as .npy files for ease of access later without the need for post processing.  More information/directions regarding the scipt are included in the scripts header.  
 
 1. Loads the .npy files for each (non)bowtie and extracts the features of interest and class into a numpy array.  Initially the goal was to make several diverse classifiers that make different mistakes when classifying bowties and would thus benifit greatly through an ensemble method.  As such, two datasets were made using the same manually identified (non)bowties:
-* **bowtie_data** focuses on features related to the profile of the bowtie as observed from the circle sweep such as:
+* **bowtie_data** shape(-1,154) focuses on features related to the profile of the bowtie as observed from the circle sweep such as:
+    * Non-features: Wafer, Image Location, Sublocation (on image), Pixel on Image
     * <span>&theta;</span><sub>M</sub> angle (measured form x+ axis) of maximum intensity in the circle sweep for the shear max image
 	* <span>&theta;<sub>0</sub> and &theta;<sub>45</sub></span> similar for shear 0 and shear 45 images
+	* Standard deviation of pixel valus in shear 0 and shear 45 images
+	* 72 values from the circle sweep around the shear 0 bowtie
+	* 72 values from the circle sweep around the shear 45 bowtie
+	* Bowtie classification 1 for bowtie 0 for nonbowtie
+* **image_data** shape(-1,135) focuses on the 8 by 8 pixel array surrounding the bowtie
+    * Non-features: Wafer, Image Location, Sublocation (on image), Pixel on Image
+	* Standard deviation of pixel valus in shear 0 and shear 45 images
+	* 8x8 numpy array of pixel values centered on the bowtie in shear 0 image converted to 1D array 
+	* 8x8 numpy array of pixel values centered on the bowtie in shear 45 image converted to 1D array 
+	* Bowtie classification 1 for bowtie 0 for nonbowtie
+
+    Note: Any bowtie that is within 10 pixels of the edge of the image is removed by this script because the non-uniform numpy array size would raise an error when training the ML classifiers.  
+
+1. Strips away features like wafer, image location, sub-image location and pixel location that will not assist in classifying each (non)bowtie.  Then balances the training sets so that there are an equal number of bowties and nonbowties.  More details are included in the script header.  
+
+1. 8 classifiers were individually optimized to classify whether or not a bowtie is present in an image.  I remained fairly consistent with how the code is structured for each classifier so I will speak about them generally.  
