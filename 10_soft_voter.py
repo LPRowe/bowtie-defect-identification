@@ -166,6 +166,9 @@ for p_crit in p_crit_vals:
     recall.append(recall_score(predict_y(p_pos,p_crit),y_true))
     f1.append(f1_score(predict_y(p_pos,p_crit),y_true))
 
+# =============================================================================
+# Plot PR and F1 curves for soft-voter
+# =============================================================================
 plt.close('all')
 plt.figure(1)
 plt.plot(p_crit_vals,precision,'r-',lw=2)
@@ -180,3 +183,31 @@ plt.plot(recall,precision,'b-',lw=2)
 plt.xlabel('Recall (False Positive Rate)')
 plt.ylabel('Precision (True Positive Rate)')
 plt.title('Precision-Recall for F1 Weighted Soft Voter')
+
+# =============================================================================
+# Plot PR and F1 curves for XGBC classifier
+# =============================================================================
+p_pos=clf_test_data['XGBC_img'][0].predict_proba(np.array(clf_test_data['XGBC_img'][1])[:,:-1])
+p_pos=[i[1] for i in p_pos]
+precision=[]
+recall=[]
+f1=[]
+p_crit_vals=np.linspace(0.01,0.85,100)
+for p_crit in p_crit_vals:
+    precision.append(precision_score(predict_y(p_pos,p_crit),y_true))
+    recall.append(recall_score(predict_y(p_pos,p_crit),y_true))
+    f1.append(f1_score(predict_y(p_pos,p_crit),y_true))
+    
+plt.figure(3)
+plt.plot(p_crit_vals,precision,'r-',lw=2)
+plt.plot(p_crit_vals,recall,'g-',lw=2)
+plt.plot(p_crit_vals,f1,'b-',lw=2)
+plt.xlabel('Bowtie Probability Cutoff')
+plt.legend(['Precision','Recall','F1 Score'])
+plt.title('P-R Scores for XGBC_img')
+
+plt.figure(4)
+plt.plot(recall,precision,'b-',lw=2)
+plt.xlabel('Recall (False Positive Rate)')
+plt.ylabel('Precision (True Positive Rate)')
+plt.title('Precision-Recall for XGBC_img')
