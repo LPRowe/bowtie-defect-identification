@@ -28,7 +28,8 @@
 
 * [x]  Standard deviation as feature for bowtie training set
 
-* [x]  Blender Probabilities: https://stats.stackexchange.com/questions/155817/combining-probabilities-information-from-different-sources
+* [x]  Soft Voter Probabilities: https://stats.stackexchange.com/questions/155817/combining-probabilities-information-from-different-sources
 
 * [ ]  Update README.md to reflect new scripts and add more detial to the headers of recent scripts
 * [ ]  Add TLDR to README.md
+* [ ]  Add GIF of bowtie and anchor to titles (including tips on identifying bowties)

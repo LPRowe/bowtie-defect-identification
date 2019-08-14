@@ -144,7 +144,7 @@ shear 0 circle sweep,
 shear 45 circle sweep,
 bowtie (1) or nonbowtie (0) ]]
 '''
-#np.save(save_dir+'\\wafer_loc_subloc_pixel_thetaM_theta0_theta45_std0_std45_shear0_shear45_bow-bool.npy',bowtie_data)
+np.save(save_dir+'\\wafer_loc_subloc_pixel_thetaM_theta0_theta45_std0_std45_shear0_shear45_bow-bool.npy',bowtie_data)
 
 '''
 Save bowtie image data as npy file in the format of 
@@ -159,4 +159,4 @@ shear 45 8x8 image,
 bowtie (1) or nonbowtie (0) ]]
 '''
 
-#np.save(save_dir+'\\wafer_loc_subloc_pixel_std0_std45_shear0_shear45_bow-bool.npy',image_data)
+np.save(save_dir+'\\wafer_loc_subloc_pixel_std0_std45_shear0_shear45_bow-bool.npy',image_data)

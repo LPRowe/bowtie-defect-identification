@@ -82,12 +82,12 @@ if seeking:
     y_val=train_val['bowties']
     X_val=train_val.drop(columns='bowties')
     
+    
     pipeline=Pipeline([('Imputer',SimpleImputer(strategy='mean'))])
     
     
     X_train_trans=pipeline.fit_transform(X_train)
     X_val_trans=pipeline.fit_transform(X_val)
-    X_test_trans=pipeline.fit_transform(X_test)
     
     # =========================================================================
     # Convert back to panda dataframe because XGBoost and Scipy dont play nice
@@ -97,7 +97,6 @@ if seeking:
     
     X_train_trans=dp.numpy_to_pd(X_train_trans,column_names_xgb)
     X_val_trans=dp.numpy_to_pd(X_val_trans,column_names_xgb)
-    X_test_trans=dp.numpy_to_pd(X_test_trans,column_names_xgb)
 
     
     

@@ -17,6 +17,21 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 import matplotlib.pyplot as plt
 
 # =============================================================================
+# SELECT WEIGHT METHOD FOR SOFT VOTING CLASSIFER
+# p=(p1*w1+p2*w2+...pn*wn)/(w1+w2+...wn)
+# 'uniform': w=1                 #All classifiers receive the same consideration
+# 'f1':      w_i=f1_i 
+# 'f1pow':   w_i=f1_i**power     
+#
+# 'uniform': all classifiers receive equal consideration in soft vote
+# 'f1': classifiers that performed better on the test data receive more consideration in soft vote
+# 'f1pow': classifiers that performed better on the test data receive much more consideration in soft vote
+#          when pow>1.  Higher powers (20 and up) cause the soft voter to behave the same as the best classifier.
+# =============================================================================
+
+weight='f1pow'
+
+# =============================================================================
 # LOAD PREPROCESSED TEST DATA FOR EACH CLASSIFIER
 # =============================================================================
 
