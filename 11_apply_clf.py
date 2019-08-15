@@ -34,6 +34,8 @@ from sklearn.externals import joblib
 os.chdir('C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification')
 import data_prep as dp
 
+import timeit
+
 xdim,ydim=640,480
 
 psdr=False
@@ -127,6 +129,7 @@ for i in filenames:
     
     #IF IMAGE DOES PASS SUBDIVIDE IMAGE AND GET LOCATION OF MAX SHEAR MAX
     dx,dy=160,120 #To make 16 images per 5x shear max image
+    dx,dy=128,96
     subimages=basic.subsub(imgM,xdim,ydim,dx,dy)
 
     #RECORD LOCATIONS OF PEAK RETARDATIONS
@@ -147,6 +150,7 @@ for i in filenames:
     
     clf=joblib.load(clf_dir+'\\XGBC_img_classifier.pkl')
     p_crit=0.8 #yields the highest classifier recall without suffering a serious drop in precision
+    
     
     bowtie_classes=[]
     for pixel in maxidx:
