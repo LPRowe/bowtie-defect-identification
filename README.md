@@ -148,6 +148,6 @@ The .py files provided in this repository are intended to be run sequentially ac
 
 1. This script serves as an example of how our best bowtie classifier can be used to identify bowties on new images outside of the training and test set.  The images are loaded as dt1 files, converted to shear 0, shear 45, and IR-transmission numpy arrays, and post processed (subtraction image applied, hypersensitive pixels reset, low quality image removal).  Each image is split into subimages and the peak pixel of each subimage is checked to see if it contains a bowtie.  Positive classifications are boxed in white while negative classifications are boxed in black.  Finally the image is annotated according the subimage index associated with each bowtie and saved.  Example images (like the one below) can be found in bowtie-defect-identification\Wafer_Images\17_example_clf_bowties.  
 
-	<p align='center'>
-	<img src='bowtie-defect-identification/classified_bowties.gif' align='middle'>
-	</p>
+<p align='center'>
+<img src='images/classified_bowties.gif'>
+</p>
