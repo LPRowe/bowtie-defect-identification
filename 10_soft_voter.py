@@ -30,6 +30,7 @@ import matplotlib.pyplot as plt
 # =============================================================================
 
 weight='f1pow'
+power=5
 
 # =============================================================================
 # LOAD PREPROCESSED TEST DATA FOR EACH CLASSIFIER
@@ -159,7 +160,7 @@ def soft_vote(ctd=clf_test_data,weight='f1pow',power=20):
     
     return(p_neg,p_pos)
 
-p_neg,p_pos=soft_vote(clf_test_data,weight='f1pow')
+p_neg,p_pos=soft_vote(clf_test_data,weight=weight,power=power)
 
 # =============================================================================
 # Predict bowtie or non-bowtie based on p_pos
