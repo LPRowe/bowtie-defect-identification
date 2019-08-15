@@ -31,7 +31,7 @@ This repository will address:
 * **[10]** Combining classifier output though weighted soft voting
     * Uniformly weighted and weighted according to each classifiers peak F1 score
 * **[11]** Demonstrating the best model's ability to classify bowties
-    * XGB Classifier outperformed 
+    * XGB Classifier outperformed soft voter
 
 
 For information:
