@@ -93,6 +93,7 @@ peakpixel=[] #the index of the pixel with the greatest shear max intensity withi
 count=0
 for i in filenames:
     
+    #LOAD FILE AND CONVERT TO 3 NUMPY ARRAYS shear 0 image (img0), shear 45 image (img45) and IR-Transmission image (imgL)
     os.chdir(datadir)
     img0,img45,imgL=basic.formimg(i,datadir)
     img0-=sub0
@@ -101,7 +102,7 @@ for i in filenames:
     #CHECK TO SEE IF IMAGE PASSES LIGHT LEVEL TEST        
     PF=basic.lightmask(np.mean(imgL),np.std(imgL),AA,SA,AS,SS)
     
-    #IF IMAGE FAILS THE LIGHT TEST THEN SKIP THAT IMAGE (CONTINUE)
+    #IF IMAGE FAILS THE LIGHT TEST THEN SKIP THAT IMAGE (image is of wafer mask or blurred)
     if PF==False:
         pf.append(0)
         imgloc.append(count)
@@ -185,6 +186,9 @@ for i in filenames:
 
     
     '''~~~~~~~~~~~~~ANNOTATE BOXES~~~~~~~~~~~~~~~'''
+    # =========================================================================
+    # Place the sub-image number above each boxed (non)bowtie and save images
+    # =========================================================================
     plt.gray()
     plt.close('all')
     

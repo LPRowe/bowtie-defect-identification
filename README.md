@@ -123,6 +123,12 @@ The .py files provided in this repository are intended to be run sequentially ac
 	    * optimal parameters are determined by evaluating the classifier via 5 fold cross validation or by an eval_set such as the validation sets used for the extreme gradient boosted classifiers
 		* the best performing parameters are used to train the classifer which is then tested on the test set, the precision, recall, and F1 score are printed
 		* once acceptable parameters were determined based on the CV scores the param grid was reduced to the best value for each parameter.  If you alter the input data I encourage you to only use these values as a starting point and reoptimize the classifiers
+	* to avoid overfitting the following regularization hyperparameters/techniques were optimized/used
+	    * XGBC: gamma, learning_rate, max_depth, reg_lambda, early stopping
+		* XGBRFC: learning_rate, max_depth, min_child_weight, subsample, colsample_bynode, reg_lambda
+		* SVC: kernel, gamma, C, number of features, size of max pool
+		* RFC: max_depth, bootstrap, min_samples_leaf, max_features
+		* ETC: max_depth, bootstrap, min_samples_leaf, max_features
 	* final_params_selected code block is where the final version of the classifier is trained (still leaving the test set out for ensemble purposes) and exported as a .pkl file
 	* export_full_transformed_dataset codeblock exports the test data in its transformed state
 	    * this saves the hastle of fitting and transforming the test sets to match each classifier's needs when testing the soft voting classifier
