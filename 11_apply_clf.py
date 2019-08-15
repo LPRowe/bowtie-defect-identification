@@ -129,7 +129,7 @@ for i in filenames:
     
     #IF IMAGE DOES PASS SUBDIVIDE IMAGE AND GET LOCATION OF MAX SHEAR MAX
     dx,dy=160,120 #To make 16 images per 5x shear max image
-    dx,dy=128,96
+    #dx,dy=128,96
     subimages=basic.subsub(imgM,xdim,ydim,dx,dy)
 
     #RECORD LOCATIONS OF PEAK RETARDATIONS
