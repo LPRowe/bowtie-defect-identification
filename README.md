@@ -146,8 +146,21 @@ The .py files provided in this repository are intended to be run sequentially ac
 	
 	Where ET=extra trees, RF=random forest, SVM=support vector machine, XGB=extreme gradient boosted, img refers to the img data set used to train the classifier and circlesweep refers to the circlesweep data set used to train the classifier.
 
-1. This script serves as an example of how our best bowtie classifier can be used to identify bowties on new images outside of the training and test set.  The images are loaded as dt1 files, converted to shear 0, shear 45, and IR-transmission numpy arrays, and post processed (subtraction image applied, hypersensitive pixels reset, low quality image removal).  Each image is split into subimages and the peak pixel of each subimage is checked to see if it contains a bowtie.  Positive classifications are boxed in white while negative classifications are boxed in black.  Finally the image is annotated according the subimage index associated with each bowtie and saved.  Example images (like the one below) can be found in bowtie-defect-identification\Wafer_Images\17_example_clf_bowties.  
+1. This script serves as an example of how our best bowtie classifier can be used to identify bowties on new images outside of the training and test set.  The images are loaded as dt1 files, converted to shear 0, shear 45, and IR-transmission numpy arrays, and post processed (subtraction image applied, hypersensitive pixels reset, low quality image removal).  Each image is split into subimages and the peak pixel of each subimage is checked to see if it contains a bowtie.  
 
-<p align='center'>
-<img src='images/classified_bowties.gif'>
-</p>
+    <p align='center'>
+    <img src='images/classified_bowties.gif'>
+    </p>
+
+    Positive classifications are boxed in white while negative classifications are boxed in black.  Finally the image is annotated according the subimage index associated with each bowtie and saved.  Example images (like the one below) can be found in bowtie-defect-identification\Wafer_Images\17_example_clf_bowties.  
+
+    A keen eye will notice bowties at (550,200) and (50,280) that were not identified.  This is because of the method used to select pixels that potentially belong to bowties.  Only the array around the most intense pixel (in the shear max image) of each subimage is classified.  This is because bowties are caused by microcracks where shear stress is locally elevated, as such it is likely for the highest shear max pixel to be located at the center of a bowtie.   
+	
+	So why 16 divisions? The GIF above is divided into 16 subimages for example only, so as not to clutter the image with annotations.  The example below shows that by simply increasing the divisions from 16 to 25 the two overlooked bowties have now been classified as well. 
+	
+	<p align='center'>
+    <img src='images/classified_bowties_dense.gif'>
+    </p>
+	
+	So why not check every pixel? We must also consider the time required to extract features and classify each bowtie.  Feature extraction and classification together require on average 1019 +/- 60 <span>&mu;</span>s.  Thus to classify every location in a wafer image (640x480 pixels) would require over 300 seconds per image.  However, by dividing the image into subimages and classifying only the most intense pixels, feature extraction and classification require only 1 ms per subimage (approximately 20,000 times faster when only considering 16 subimages).  
+	
