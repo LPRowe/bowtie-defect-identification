@@ -145,7 +145,17 @@ The .py files provided in this repository are intended to be run sequentially ac
     <p align='center'><img src='images/F1_score_all_classifiers.png' width='600'></p>
 	
 	Where ET=extra trees, RF=random forest, SVM=support vector machine, XGB=extreme gradient boosted, img refers to the img data set used to train the classifier and circlesweep refers to the circlesweep data set used to train the classifier.
-
+	
+	The xgboost.XGBClsasifier() and xgboost.XGBRFClassifier() outperformed all of the other considered classifiers.  Below are the precision vs threshold and recall vs threshold plots for the xgboost classifiers, where threshold is the critical predicted probability a classifier must have to classify an instance as a bowtie.  
+	
+	<p align='center'>
+	<img src='images/XGBC-XGBRFC_precision-recall.png' width='600'>
+	</p>
+	
+	We care more about having a high recall value than a high precision value.  Why? Because our end goal is to characterize wafer strength according to the distribution of microcracks on each wafer.  Missing a critical microcrack would be more detrimental to our goal than accidentally characterizing a nonbowtie as a bowtie.  Thus when the classifier is implemented in practice the bowtie probability cutoff will be set to 0.8 because for higher threshold values there is very little gain in recall and a severe decrease in precision.  
+	
+	Using a threshold value of 0.8 with the xgboost.XGBClassifier() a **recall value of 96%** with a **precision of 87%** was achieved resulting in an F1 score of 0.913.
+	
 1. This script serves as an example of how our best bowtie classifier can be used to identify bowties on new images outside of the training and test set.  The images are loaded as dt1 files, converted to shear 0, shear 45, and IR-transmission numpy arrays, and post processed (subtraction image applied, hypersensitive pixels reset, low quality image removal).  Each image is split into subimages and the peak pixel of each subimage is checked to see if it contains a bowtie.  
 
     <p align='center'>
