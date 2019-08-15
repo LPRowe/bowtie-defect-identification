@@ -112,7 +112,7 @@ The .py files provided in this repository are intended to be run sequentially ac
 
 1. Strips away features like wafer, image location, sub-image location and pixel location that will not assist in classifying each (non)bowtie.  Then balances the training sets so that there are an equal number of bowties and nonbowties.  More details are included in the script header.  
 
-1. 8 classifiers were individually optimized to classify whether or not a bowtie is present in an image.  I remained fairly consistent with how the code is structured for each classifier so I will speak about them generally.  
+1. Eight classifiers were individually optimized to classify whether or not a bowtie is present in an image.  I remained fairly consistent with how the code is structured for each classifier so I will speak about them generally.  
 
     *  bowtie_data or image_data is loaded and split into test and train data
 	    * random_state=42 was used across all classifiers for uniformity
@@ -131,9 +131,13 @@ The .py files provided in this repository are intended to be run sequentially ac
 
 1. Each classifier is capable of predicting the probability of each instance being a bowtie or nonbowtie.  A soft voting classifier takes into account the predicted probabilities from all of the classifiers when calculating the probability that an instance is a bowtie.  Each classifier can be given equal weight ('uniform') or weighted according to how well the classifier performed on its own ('f1' or 'f1pow').  These are explained in more detail in the script comments.  
 
-* The performance of the classifiers has been calculated individually and using the soft voting method in script [10] and in /side-scripts/PR_scores_for_classifiers.py
-* With regard to the soft voter's performance: 'f1pow'>'f1'>'uniform'
-* As evident below, the xgboost.XGBClassifier() outperformed even the soft voting classifier
-* As the power of 'f1pow' is increased the soft voter's F1 curve will gradually approach XGB_img classifier's F1 curve ('f1pow' soft voting curve where power=20 is included in images/f1pow_score_all_classifiers.png)
+	* The performance of the classifiers has been calculated individually and using the soft voting method in script [10] and in /side-scripts/PR_scores_for_classifiers.py
+	* With regard to the soft voter's performance: 'f1pow'>'f1'>'uniform'
+	* As evident below, the xgboost.XGBClassifier() outperformed even the soft voting classifier
+	* As the power of 'f1pow' is increased the soft voter's F1 curve will gradually approach XGB_img classifier's F1 curve ('f1pow' soft voting curve where power=20 is included in images/f1pow_score_all_classifiers.png)
 
-    <img src='images/F1_score_all_classifiers.png' width='600'>
+    <p align='center'><img src='images/F1_score_all_classifiers.png' width='600'></p>
+	
+	Where ET=extra trees, RF=random forest, SVM=support vector machine, XGB=extreme gradient boosted, img refers to the img data set used to train the classifier and circlesweep refers to the circlesweep data set used to train the classifier.
+
+1. 
