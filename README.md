@@ -4,7 +4,7 @@ Silicon photovoltaic wafers are cut from silicon inguts using a wire saw.  The w
 
 This repository post processes raw IR-GFP image data [1-4], assists in creating two machine learning (ML) training sets for identifying bowties [5-8], optimizes 8 ML classifiers [9], combines classifier output though weighted soft voting [10], and demonstrates the best model's ability to classify bowties [11].  
 
-**Spoiler:** Using xgboost.XGBClassifier() a **recall value of 96%** with a **precision of 87%** was achieved resulting in an F1 score of 0.913.  This performed better than the soft voting classifier when uniformly weighted and when weighted according to each classifiers peak F1 score.  Only by heavily weighting the soft voter were similar results to the XGB classifier attained.  
+Using xgboost.XGBClassifier() a **recall value of 96%** with a **precision of 87%** was achieved resulting in an F1 score of 0.913.  This performed better than the soft classifier when uniformly weighted and when weighted according to each classifiers peak F1 score.  Only by heavily weighting the soft voter were similar results to the XGB classifier produced.  
 
 # bowtie-defect-identification
 Bowtie defects (shown below) can be observed in microscopic shear stress images of silicon wafers.  
@@ -118,6 +118,7 @@ The .py files provided in this repository are intended to be run sequentially ac
 	    * random_state=42 was used across all classifiers for uniformity
 		* test data (20%) and training data (80%) are both balanced with respect to (non)bowties
 		* in the case of XGBC_img and XGB-RFC_img data was split into test data (20%), validation data (16%) and training data (64%) for optimizing parameters and used the 80:20 split for final training
+		* transformers for SVMs use a standard scaler to prevent outliers from skewing the data while random forest classifiers do not use a scaler as it is not necessary
 	* seeking code block is where parameters are optimized using either grid search or random search
 	    * optimal parameters are determined by evaluating the classifier via 5 fold cross validation or by an eval_set such as the validation sets used for the extreme gradient boosted classifiers
 		* the best performing parameters are used to train the classifer which is then tested on the test set, the precision, recall, and F1 score are printed
@@ -126,4 +127,12 @@ The .py files provided in this repository are intended to be run sequentially ac
 	* export_full_transformed_dataset codeblock exports the test data in its transformed state
 	    * this saves the hastle of fitting and transforming the test sets to match each classifier's needs when testing the soft voting classifier
 		
-    A few classifiers have custom transformers, such as reduce_features_in_sweep, combine_theta_peaks, and max_pooling.  The latter two assume the input file is a pandas dataframe.  As such, these transformers should be placed at the beginning of the transformation pipeline since other transformers (like imputers) output numpy arrays.
+    A few classifiers have custom made transformers, such as reduce_features_in_sweep, combine_theta_peaks, and max_pooling.  The latter two assume the input file is a pandas dataframe.  As such, these transformers should be placed at the beginning of the transformation pipeline since other transformers (like imputers) output numpy arrays.
+
+1. Each classifier is capable of predicting the probability of each instance being a bowtie or nonbowtie.  A soft voting classifier takes into account the predicted probabilities from all of the classifiers when calculating the probability that an instance is a bowtie.  Each classifier can be given equal weight ('uniform') or weighted according to how well the classifier performed on its own ('f1' or 'f1pow').  These are explained in more detail in the script comments.  
+
+* The performance of the classifiers has been calculated individually and using the soft voting method in script [10] and in /side-scripts/PR_scores_for_classifiers.py
+* With regard to the soft voter's performance: 'f1pow'>'f1'>'uniform'
+* As evident below, the xgboost.XGBClassifier() outperformed even the soft voting classifier
+
+    <img src='images/F1_score_all_classifiers.png' width='600'>

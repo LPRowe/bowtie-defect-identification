@@ -215,32 +215,7 @@ def extract_features_XGBC(sh0_arr,sh45_arr,pixel):
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         
         
         

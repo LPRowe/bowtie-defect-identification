@@ -103,9 +103,9 @@ for clf_ in clf_test_data:
     clf_test_data[clf_]=[clf,data,p_soft,p_hard,y,F1]
     
 # =============================================================================
-# Create our blender with predictions weighted by F1 score
+# Create our soft voter with predictions weighted by F1 score
 # =============================================================================
-def blend(ctd=clf_test_data,weight='f1pow',power=2):
+def soft_vote(ctd=clf_test_data,weight='f1pow',power=20):
     #[0  ,1   ,2     ,3     ,4,5 ]
     #[clf,data,p_soft,p_hard,y,F1]
     
@@ -143,7 +143,7 @@ def blend(ctd=clf_test_data,weight='f1pow',power=2):
     
     return(p_neg,p_pos)
 
-p_neg,p_pos=blend(clf_test_data,weight='f1pow')
+p_neg,p_pos=soft_vote(clf_test_data,weight='f1pow',power=20)
 
 
 # =============================================================================
@@ -240,8 +240,8 @@ for clf_name in clf_test_data:
     plt.plot(p_crit_vals,globals()['f_%s'%clf_name])
 plt.plot(p_crit_vals,f_blend)
 legend=[clf_name for clf_name in clf_test_data]
-legend.append('Blender')
+legend.append('Soft Voter uniform')
 plt.legend(legend)
 plt.xlabel('Bowtie Probability Cutoff')
 plt.ylabel('F1 Score')
-plt.savefig('F1_score_all_classifiers.png')
+plt.savefig('f1pow_score_all_classifiers.png')
