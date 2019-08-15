@@ -113,7 +113,7 @@ for clf_ in clf_test_data:
     p_soft,p_hard,y=predict(clf,data)
     
     # =========================================================================
-    # Calculate F1 for each classifier to use for weighted blending
+    # Calculate F1 for each classifier to use for weighted voting
     # =========================================================================
     #F1=soft_eval_to_f1(p,y)
     F1=f1_score(p_hard,y)

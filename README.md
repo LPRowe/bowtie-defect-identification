@@ -134,5 +134,6 @@ The .py files provided in this repository are intended to be run sequentially ac
 * The performance of the classifiers has been calculated individually and using the soft voting method in script [10] and in /side-scripts/PR_scores_for_classifiers.py
 * With regard to the soft voter's performance: 'f1pow'>'f1'>'uniform'
 * As evident below, the xgboost.XGBClassifier() outperformed even the soft voting classifier
+* As the power of 'f1pow' is increased the soft voter's F1 curve will gradually approach XGB_img classifier's F1 curve ('f1pow' soft voting curve where power=20 is included in images/f1pow_score_all_classifiers.png)
 
     <img src='images/F1_score_all_classifiers.png' width='600'>

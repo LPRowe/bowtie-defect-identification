@@ -95,7 +95,7 @@ for clf_ in clf_test_data:
     p_soft,p_hard,y=predict(clf,data)
     
     # =========================================================================
-    # Calculate F1 for each classifier to use for weighted blending
+    # Calculate F1 for each classifier to use for weighted voting
     # =========================================================================
     #F1=soft_eval_to_f1(p,y)
     F1=f1_score(p_hard,y)
@@ -159,13 +159,13 @@ y_true=[int(i) for i in clf_test_data['ET_img'][4].tolist()]
 p_crit_vals=np.linspace(0.01,0.99,500)
 
 
-p_blend=[]
-r_blend=[]
-f_blend=[]
+p_soft=[]
+r_soft=[]
+f_soft=[]
 for p_crit in p_crit_vals:
-    p_blend.append(precision_score(predict_y(p_pos,p_crit),y_true))
-    r_blend.append(recall_score(predict_y(p_pos,p_crit),y_true))
-    f_blend.append(f1_score(predict_y(p_pos,p_crit),y_true))
+    p_soft.append(precision_score(predict_y(p_pos,p_crit),y_true))
+    r_soft.append(recall_score(predict_y(p_pos,p_crit),y_true))
+    f_soft.append(f1_score(predict_y(p_pos,p_crit),y_true))
 
 save_dir='C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification\\side-scripts\\pr-curves'  
 os.chdir(save_dir)
@@ -238,7 +238,7 @@ plt.savefig('XGBC-XGBRFC_F1.png')
 plt.figure(4)
 for clf_name in clf_test_data:
     plt.plot(p_crit_vals,globals()['f_%s'%clf_name])
-plt.plot(p_crit_vals,f_blend)
+plt.plot(p_crit_vals,f_soft)
 legend=[clf_name for clf_name in clf_test_data]
 legend.append('Soft Voter uniform')
 plt.legend(legend)
