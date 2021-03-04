@@ -31,7 +31,6 @@ from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
 
 from sklearn.externals import joblib
 
-os.chdir('C:\\Users\\Logan Rowe\\Desktop\\bowtie-defect-identification')
 import data_prep as dp
 
 import timeit
@@ -208,7 +207,7 @@ for i in filenames:
         loccount+=1
     
     os.chdir(savedir)
-    plt.savefig(str(count)+'_0.png')
+    #plt.savefig(str(count)+'_0.png')
     
     plt.close('all')
     fig,ax=plt.subplots()
@@ -223,7 +222,7 @@ for i in filenames:
         loccount+=1
     
     os.chdir(savedir)
-    plt.savefig(str(count)+'_45.png')
+    #plt.savefig(str(count)+'_45.png')
     
     '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 

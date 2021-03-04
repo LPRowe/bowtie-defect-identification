@@ -1,0 +1,4 @@
+sklearn
+matplotlib==3.2.0
+numpy
+glob2
