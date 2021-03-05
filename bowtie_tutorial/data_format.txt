@@ -1,9 +1,0 @@
-Each row contains 131 comma separated values:
-[Indices]: details
-
-
-[0]      standard deviation (std) of pixel values in shear 0 image, 
-[1]      std of pixels in shear 45 image,
-[2:66]   64 pixels values representing a flattened (8 by 8) cropped shear 0 image,
-[67:130] 64 pixel values representing a flattened (8 by 8) cropped shear 45 image,
-[131]    label (1 for bowtie, 0 for nonbowtie)

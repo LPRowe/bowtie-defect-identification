@@ -1,0 +1,12 @@
+Each row contains 131 comma separated values:
+[Indices]: details
+
+
+[0]      standard deviation (std) of pixel values in shear 0 image, 
+[1]      std of pixels in shear 45 image,
+[2:65]   64 pixels values representing a flattened (8 by 8) max-pooled shear 0 image,
+[66:129] 64 pixel values representing a flattened (8 by 8) max-pooled shear 45 image,
+[130]    label (1 for bowtie, 0 for nonbowtie)
+
+
+Note: prior to max pooling, shear0 and shear45 images were (40 by 40) pixels centered on the bowtie

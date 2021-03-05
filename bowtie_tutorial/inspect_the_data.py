@@ -21,10 +21,12 @@ This process can be done recursively since replacing one hot pixel may reveal an
 
 Take a look at the images in ./images/5x_images.  Can you spot a hypersensitive pixel?
 """
+import collections
+
 import numpy as np
 import matplotlib.pyplot as plt
 import glob
-import collections
+
 from reading_the_data import get_images, show_images
 
 def find_hot_pixels(file_names):
@@ -58,9 +60,6 @@ def replace_hot_pixels(image, hot_pixels, xdim=640, ydim=480):
             for j in range(max(0, x-1), min(x+2, xdim)):
                 if i != j:
                     neighbors.append(image[i][j])
-        print()
-        print(image[y][x])
-        print(neighbors)
         image[y][x] = sum(neighbors) / len(neighbors) if neighbors else 0
     return image
         
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     imgL, img0, img45 = get_images(FILES[0])
     plt.figure(1)
     plt.imshow(imgL)
-    
+    plt.title("Light Image with Hypersensitive Pixel")
     
     # Replace the hot pixels
     hot_pixels = [15968, 15546]
@@ -91,3 +90,4 @@ if __name__ == "__main__":
     # Inspect image after replacing hot pixel (notice the contrast change)
     plt.figure(2)
     plt.imshow(imgL)    
+    plt.title("Light Image after Replacing Hypersensitive Pixel")

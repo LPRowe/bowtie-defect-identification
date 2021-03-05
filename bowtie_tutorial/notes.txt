@@ -1,0 +1,34 @@
+DAY 1
+
+Nonstandard required modules: numpy, matplotlib, glob
+
+Supplementary images: 
+
+	images/5x_images: IR Transmission, Shear0 and Shear45 .png images of the dataset
+	images/hot_pixel_removal: Before and after image for removing hypersensitive pixels
+	images/subtraction_images: Examples of subtraction images and before and after images
+
+Order of scripts:
+
+	1. reading_the_data.py
+		
+		Read, parse, and recreate images from a .dt1 file.
+		Plot and save 25 Light, Shear0, and Shear45 images extracted from the .dt1 files.
+
+	2. inspect_the_data.py
+
+		Use a multiset to identify pixels that frequently have a large value.
+		Replace these pixels with the mean of their neighbors.
+
+	3. apply_subtraction_image.py
+
+		Create and apply a subtraction image.
+
+DAY 2
+
+Nonstandard required modules:
+
+Supplementary images:
+
+Order of scripts:
+		

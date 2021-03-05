@@ -1,7 +1,7 @@
 """
 Depending on the source, data will be stored in different formats.  
 
-In this case, the data is from DeltaVisions software and is stored in .dt1 files.
+In this case, the data is from DeltaVision's software and is stored in .dt1 files.
 Each file consists of a header with several flags marked with '@**@flag_name'.
 
 The final flag is '@**@data' which is followed by a 307,200 pixel values.
@@ -9,13 +9,14 @@ These represent 3 flattened images the Light Image (IR-Transmission), Shear0, an
 
 This script:
     1. Reads .dt1 files
-    2. Parses the data for the 3 images data specifically
-    3. Reshapes the flattened arrays into images
+    2. Parses the data for the 3 images data specifically.
+    3. Reshapes the flattened arrays into images.
     4. Displays and / or saves the images.
 """
+import array
+
 import numpy as np
 import matplotlib.pyplot as plt
-import array
 import glob
 
 def get_images(filename, xdim = 640, ydim = 480):
@@ -57,10 +58,13 @@ def show_images(imgL, img0, img45):
     plt.gray() 
     plt.figure('Light')
     plt.imshow(imgL)
+    plt.title("IR Transmission")
     plt.figure('Shear 0')
     plt.imshow(img0)
+    plt.title("Shear 0")
     plt.figure('Shear 45')
     plt.imshow(img45)
+    plt.title("Shear 45")
     
 def save_images(file_names, save_file = "./images/5x_images/"):
     """Saves a copy of each image."""
@@ -74,6 +78,7 @@ def save_images(file_names, save_file = "./images/5x_images/"):
 if __name__ == "__main__":
     plt.close('all')
     FILES = glob.glob('./data_files/*.dt1')
-    imgL, img0, img45 = get_images(FILES[1])
+    IMAGE_NUMBER = 1 # choose an image to view from 0 to 24
+    imgL, img0, img45 = get_images(FILES[IMAGE_NUMBER])
     show_images(imgL, img0, img45)
     save_images(FILES)

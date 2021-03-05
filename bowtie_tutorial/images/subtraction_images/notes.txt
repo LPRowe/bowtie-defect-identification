@@ -1,0 +1,13 @@
+0009_subtraction_image_example.png
+
+	The detector artifacts are more readily visible in this example.
+	It also contains very clear bowties that are not affected by the subrraction image.
+
+
+
+0017_sub{0|45}_low.npy
+
+	Was created from 108 images from the regions on the wafer exhibiting
+	the lowest shear max retardation values.  
+
+	This tutorial uses images from wafer 0017.
