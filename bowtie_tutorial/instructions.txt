@@ -1,6 +1,6 @@
 DAY 1
 
-Nonstandard required modules: numpy, matplotlib, glob
+Third party modules: numpy, matplotlib, glob2
 
 Supplementary images: 
 
@@ -26,7 +26,7 @@ Order of scripts:
 
 DAY 2
 
-Nonstandard required modules:
+Third party modules:
 
 Supplementary images:
 

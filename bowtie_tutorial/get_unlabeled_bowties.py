@@ -38,7 +38,7 @@ def subdivide(image, N, xdim=640, ydim=480):
             subimages.append(image[i:i+dy, j:j+dx])
     return subimages
 
-def local_to_global_index(i,j,dx,dy,N):
+def local_to_global_index(i, j, dx, dy, N):
     """Converts the index of peak value in a subdivided image to the index in the original image."""
     return N*(j//N)*dx*dy + N*dx*(i//dx) + dx*(j%N) + i%dx
 
@@ -65,7 +65,7 @@ def add_boxes(image, points, size=10, xdim=640, ydim=480):
                 image[i-size][dj] = max_val
     return image
         
-def annotate_image(file_name, sub0, sub45, img_number, N=4, save_dir='./images/annotated_images/', hot_pixels=[15968, 15546], xdim=640, ydim=480):
+def annotate_image(file_name, sub0, sub45, img_number, N=5, save_dir='./images/annotated_images/', hot_pixels=[15968, 15546], xdim=640, ydim=480):
     """
     Annotate the image by placing a box around potential bowties.
     Applies image processing steps: subtraction image and hot pixel removal
@@ -133,9 +133,9 @@ if __name__ == "__main__":
     run_all_images = False
     if not run_all_images:
         # Pick an image from 0 to 24
-        IMAGE_NUMBER = 0
+        IMAGE_NUMBER = 1
         annotate_image(FILES[IMAGE_NUMBER], sub0, sub45, IMAGE_NUMBER, N=N)
     else:
-        for img_number, file_name in enumerate(FILES, 1):
+        for img_number, file_name in enumerate(FILES):
             print('Annotating',img_number, '/', len(FILES))
             annotate_image(file_name, sub0, sub45, img_number)

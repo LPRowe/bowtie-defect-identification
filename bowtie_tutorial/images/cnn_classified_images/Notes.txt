@@ -1,0 +1,14 @@
+Every bowtie has three images associated with it.
+
+There are a few ways we can feed an image like this to a CNN.
+
+We could stack the shear0, shear45, and Light images like they were different color channels (R, G, B)
+then use a 3D kernel.  This approach is recommended because it makes it easier for the model to 
+see the relationship between pixel (i, j) in the shear0 image and pixel (i, j) in the shear 45 image.
+
+However, for the sake of simplicity, the shear 0 and shear 45 images were stacked side by side to form
+an image with dimensions (16 by 8) and 2D kernels were used along with batch normalization.  
+
+The resulting input images are shown in this folder.  
+
+I skipped over a ton of details here, but if you are interested in CNN's or just machine learning in general, I highly recommend Aurelien Geron's book Hands On Machine Learning the Second Edition.  

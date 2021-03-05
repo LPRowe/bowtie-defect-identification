@@ -1,0 +1,7 @@
+The four are 8 by 8 pixel images are cropped from the larger images.
+
+Two are from region 3 representing a bowtie.
+
+Two are from region 6 representing a non-bowtie.
+
+The 64 * 2 pixel values from the cropped shear 0 and shear 45 images are the data points that are provided for each bowtie and non-bowtie sample that is fed to the machine learning model during training.
