@@ -38,6 +38,8 @@ Supplementary images:
 
 	images/cnn_classified_images: shear0 stacked on top of shear45 image and classified by a CNN
 
+	images/classified_images: 5x images with 16 regions each classified as bowtie (white box) or nonbowtie (black box)
+
 Order of scripts:
 
 	4. get_unlabeled_bowties.py
@@ -59,3 +61,14 @@ Order of scripts:
 		Calculates the accuracy.
 
 		Plots a prediction from the test dataset along with the actual label and confidence level.
+
+		Demonstrates the effects of scaling features and reducing the dimensions of the input data.
+		These last two items are left out of the saved model for simplicity.
+		If used, they would also need to be applied in implement_classifier.py when identifying bowties.
+
+	6. implement_classifier.py
+
+		Subdivides the image into N by N regions.
+		Finds the most intense pixel in each region.
+		Classified the pixel as either a bowtie or nonbowtie using the classifier we trained in 5.
+		Boxes the region in white if it is a bowtie and black if it is not a bowite.

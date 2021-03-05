@@ -1,48 +1,48 @@
 # -*- coding: utf-8 -*-
 """
-Now that we know how to remove optical aberations and hypersensitive pixels,
-it's time to get the training data.  
+The final step is to use the trained classifier on new images.  
 
-This is often a very time intensive step, in particular for supervised learning
-models that require labeled data.
+This script is nearly identical to get_unlabeled_bowties.py
 
-In this script we will identify 25 regions per image that can be used for training data.
+The difference is that before we place a box around a potential bowtie, we extract the 128
+features from the region of interest in the shear 0 and shear 45 images, then feed those
+features to the machine learning model we trained to predict if it is a bowtie or not.
 
-The image will be split into 25 evenly sized regions and in each region a box is placed
-around the most intense pixel.  The intensity of pixel (i, j) is img0[i][j]**2 + img45[i][j]**2.
+If it is a bowite, we box it in white, if it is not a bowtie, then we box it in black.
 
-The most intense pixel is chosen in each region, because bowties tend to contain the highest
-intensity pixel in a subregion.  
+An important item to note here is that the training images do not overlap with the images
+used to create the provided training data.
 
-The end result will be 25 Shear0 and Shear45 images that each have 25 boxed regions.
-The boxed regions will be characterized by a human as either containing
-a bowtie or not containing a bowtie.  
+We created a test set and a training set in the last module to test the model on bowties it had not
+seen before.  Similarly, if we used images that were in the training set, the model would appear to
+be performing unrealistically well.
 """
+import pickle 
+
 import numpy as np
 import glob
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import TextArea, AnnotationBbox
 
+# Note: suppressing the display of matplotlib here will significantly decrease the runtime
+
 from inspect_the_data import replace_hot_pixels, pixel_to_xy
 from reading_the_data import get_images
+from get_unlabeled_bowties import subdivide, local_to_global_index 
 
-def subdivide(image, N, xdim=640, ydim=480):
+def extract_features(img0, img45, j, i, xdim=640, ydim=480):
     """
-    Divides image into N*N subimages.
-    Returns a list of these subimages.
+    Gets 128 pixel values from the 8 by 8 box centered at i, j in the shear0 and shear45 images.
+    If the pixel is too close to the edge of the image returns a zerofilled array.
+    Returns a 1D array with 128 pixel values, flattened img0, then flattened img45
     """
-    dx, dy = xdim // N, ydim // N
-    subimages = []
-    for i in range(0, ydim, dy):
-        for j in range(0, xdim, dx):
-            subimages.append(image[i:i+dy, j:j+dx])
-    return subimages
+    if (i < 4) or (j < 4) or (i > 476) or (j > 636):
+        return np.zeros((1, 128))
+    data0 = list(np.reshape(img0[i-4: i+4, j-4: j+4], (64,)))
+    data45 = list(np.reshape(img45[i-4: i+4, j-4: j+4], (64,)))
+    return np.array(data0 + data45).reshape((1, -1))
 
-def local_to_global_index(i, j, dx, dy, N):
-    """Converts the index of peak value in a subdivided image to the index in the original image."""
-    return N*(j//N)*dx*dy + N*dx*(i//dx) + dx*(j%N) + i%dx
-
-def add_boxes(image, points, size=10, xdim=640, ydim=480):
+def add_boxes(image, points, bowties, size=10, xdim=640, ydim=480):
     """
     Places a white box of edge length 2*size around each point in points.
     Returns the image with boxes added.
@@ -50,22 +50,24 @@ def add_boxes(image, points, size=10, xdim=640, ydim=480):
     image: numpy array of dimensions (xdim, ydim)
     points: a list of points to be boxed
     """
-    max_val = np.max(image)
-    for point in points:
+    maxi = np.max(image)
+    mini = np.min(image)
+    for point, bowtie in zip(points, bowties):
+        val = maxi if bowtie else mini # white box for bowties or black box for nonbowties    
         j, i = pixel_to_xy(point)
         for di in range(max(0, i-size), min(ydim, i+size+1)):
             if j + size < xdim:
-                image[di][j+size] = max_val
+                image[di][j+size] = val
             if j - size >= 0:
-                image[di][j-size] = max_val
+                image[di][j-size] = val
         for dj in range(max(0, j-size), min(xdim, j+size+1)):
             if i + size < ydim:
-                image[i+size][dj] = max_val
+                image[i+size][dj] = val
             if i - size >= 0:
-                image[i-size][dj] = max_val
+                image[i-size][dj] = val
     return image
         
-def annotate_image(file_name, sub0, sub45, img_number, N=5, save_dir='./images/annotated_images/', hot_pixels=[15968, 15546], xdim=640, ydim=480):
+def annotate_image(file_name, sub0, sub45, img_number, model, N=5, save_dir='./images/classified_images/', hot_pixels=[15968, 15546], xdim=640, ydim=480):
     """
     Annotate the image by placing a box around potential bowties.
     Applies image processing steps: subtraction image and hot pixel removal
@@ -100,9 +102,13 @@ def annotate_image(file_name, sub0, sub45, img_number, N=5, save_dir='./images/a
     peak_pixels = [np.argmax(img) for img in small_images]
     peak_pixels = [local_to_global_index(i, j, xdim//N, ydim//N, N) for j,i in enumerate(peak_pixels)]
     
+    # Classify each location as a bowtie or non bowtie
+    features = [extract_features(img0, img45, *pixel_to_xy(i)) for i in peak_pixels]
+    bowties = [model.predict(data) for data in features]
+    
     # Place a white box around each peak pixel
-    img0 = add_boxes(img0, peak_pixels)
-    img45 = add_boxes(img45, peak_pixels)
+    img0 = add_boxes(img0, peak_pixels, bowties)
+    img45 = add_boxes(img45, peak_pixels, bowties)
     
     # Annotate each box with a number
     for image, name in [(img0, str(img_number) + '_0'), (img45, str(img_number) + '_45')]:
@@ -128,14 +134,18 @@ if __name__ == "__main__":
     FILES = glob.glob('./data_files/*.dt1')
     
     # Choose how many subregions to split the image into 
-    N = 5 # there will be 5 * 5 = 25 subregions
+    N = 4 # there will be N * N subregions
     
+    # load the previously trained classifier
+    model = pickle.load(open('./trained_classifiers/sgd_classifier.pkl', 'rb'))
+    
+    # Set run all images to true to classify all 25 images
     run_all_images = False
     if not run_all_images:
         # Pick an image from 0 to 24
-        IMAGE_NUMBER = 1
-        annotate_image(FILES[IMAGE_NUMBER], sub0, sub45, IMAGE_NUMBER, N=N)
+        IMAGE_NUMBER = 0
+        annotate_image(FILES[IMAGE_NUMBER], sub0, sub45, IMAGE_NUMBER, model, N=N)
     else:
         for img_number, file_name in enumerate(FILES):
             print('Annotating',img_number, '/', len(FILES))
-            annotate_image(file_name, sub0, sub45, img_number, N=N)
+            annotate_image(file_name, sub0, sub45, img_number, model, N=N)
