@@ -26,9 +26,36 @@ Order of scripts:
 
 DAY 2
 
-Third party modules:
+Third party modules: sklearn, numpy, matplotlib, glob2
 
 Supplementary images:
 
+	images/annotated_images: boxed but not classified potential bowties, boxed regions represent
+				 the most intense pixels in the region
+
+	images/bowtie: shows 8 by 8 shear 0 and shear 45 images of bowties and nonbowties
+                       this is how much information is given to the classifier
+
+	images/cnn_classified_images: shear0 stacked on top of shear45 image and classified by a CNN
+
 Order of scripts:
+
+	4. get_unlabeled_bowties.py
+
+		Annotates images for a human to identify locations as bowtie or nonbowtie
+		Skipping the step of actually annotating the data and using the prepared training data.
+
+	5. train_sgd_classifier.py
+
+		Loads features (shear0 and shear45 pixel values) and labels (bowtie or not bowtie) from 
+		the prepared training data file.  
 		
+		Splits the data into a training and testing set.
+
+		Double checks that an even number of bowties and nonbowties exist in each set.
+
+		Trains a stochastic gradient descent model.
+
+		Calculates the accuracy.
+
+		Plots a prediction from the test dataset along with the actual label and confidence level.
