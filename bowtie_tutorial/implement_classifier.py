@@ -42,7 +42,7 @@ def extract_features(img0, img45, j, i, xdim=640, ydim=480):
     data45 = list(np.reshape(img45[i-4: i+4, j-4: j+4], (64,)))
     return np.array(data0 + data45).reshape((1, -1))
 
-def add_boxes(image, points, bowties, size=10, xdim=640, ydim=480):
+def add_boxes_clf(image, points, bowties, size=10, xdim=640, ydim=480):
     """
     Places a white box of edge length 2*size around each point in points.
     Returns the image with boxes added.
@@ -67,7 +67,7 @@ def add_boxes(image, points, bowties, size=10, xdim=640, ydim=480):
                 image[i-size][dj] = val
     return image
         
-def annotate_image(file_name, sub0, sub45, img_number, model, N=5, save_dir='./images/classified_images/', hot_pixels=[15968, 15546], xdim=640, ydim=480):
+def annotate_image_clf(file_name, sub0, sub45, img_number, model, N=5, save_dir='./images/classified_images/', hot_pixels=[15968, 15546], xdim=640, ydim=480):
     """
     Annotate the image by placing a box around potential bowties.
     Applies image processing steps: subtraction image and hot pixel removal
@@ -107,8 +107,8 @@ def annotate_image(file_name, sub0, sub45, img_number, model, N=5, save_dir='./i
     bowties = [model.predict(data) for data in features]
     
     # Place a white box around each peak pixel
-    img0 = add_boxes(img0, peak_pixels, bowties)
-    img45 = add_boxes(img45, peak_pixels, bowties)
+    img0 = add_boxes_clf(img0, peak_pixels, bowties)
+    img45 = add_boxes_clf(img45, peak_pixels, bowties)
     
     # Annotate each box with a number
     for image, name in [(img0, str(img_number) + '_0'), (img45, str(img_number) + '_45')]:
@@ -144,8 +144,8 @@ if __name__ == "__main__":
     if not run_all_images:
         # Pick an image from 0 to 24
         IMAGE_NUMBER = 0
-        annotate_image(FILES[IMAGE_NUMBER], sub0, sub45, IMAGE_NUMBER, model, N=N)
+        annotate_image_clf(FILES[IMAGE_NUMBER], sub0, sub45, IMAGE_NUMBER, model, N=N)
     else:
         for img_number, file_name in enumerate(FILES):
             print('Annotating',img_number, '/', len(FILES))
-            annotate_image(file_name, sub0, sub45, img_number, model, N=N)
+            annotate_image_clf(file_name, sub0, sub45, img_number, model, N=N)

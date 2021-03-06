@@ -25,6 +25,7 @@ import glob
 from reading_the_data import get_images, show_images
 
 def create_subtraction_images(file_names, xdim=640, ydim=480):
+    """Creates 2 subtraction images by averaging all shear0 and shear45 images."""
     sub0 = np.zeros((ydim, xdim))
     sub45 = np.zeros((ydim, xdim))
     for i, file_name in enumerate(file_names):
@@ -36,7 +37,7 @@ def create_subtraction_images(file_names, xdim=640, ydim=480):
 
 if __name__ == "__main__":
     plt.close('all')
-    FILES = glob.glob('./data_files/*.dt1')
+    FILES = glob.glob('./data_files/*.dt1') # get a list of the path to each .dt1 file
     
     # Pick an image between 0 and 24
     IMAGE_NUMBER = 20

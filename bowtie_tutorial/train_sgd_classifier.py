@@ -74,7 +74,6 @@ def evaluate(predictions, actual):
     print('F1', round(f1_score(actual, predictions), 2))
     print()
     
-    
 def max_pool(image, kernel_size = 2, stride = 2, padding = 0):
     '''
     Applies max pool to 2D image.
@@ -116,7 +115,7 @@ if __name__ == "__main__":
     # A healthy split is 80% : 20% or 64% : 16% : 20% (train : validation : testing) but we will skew our
     # split towards the training set because we don't have that many samples (1500)
     # =============================================================================
-    (X_train, y_train), (X_test, y_test) = split_data(X, y, test_size = 0.10)
+    (X_train, y_train), (X_test, y_test) = split_data(X, y, test_size = 0.10) # 90% Training 10% testing
     
     # =============================================================================
     # Plot the data to make sure that there are an even number of bowties and nonbowties in each 

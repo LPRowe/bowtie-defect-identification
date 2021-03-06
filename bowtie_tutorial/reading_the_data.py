@@ -81,4 +81,4 @@ if __name__ == "__main__":
     IMAGE_NUMBER = 1 # choose an image to view from 0 to 24
     imgL, img0, img45 = get_images(FILES[IMAGE_NUMBER])
     show_images(imgL, img0, img45)
-    save_images(FILES)
+    #save_images(FILES)
